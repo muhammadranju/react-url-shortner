@@ -3,7 +3,7 @@ import { MdOutlineChevronRight } from "react-icons/md";
 const Banner = () => {
   return (
     <div className="flex flex-col justify-center items-center">
-      <h2 className="text-white/85 lg:text-6xl text-3xl font-bold text-center  ">
+      <h2 className="text-white/85 lg:text-5xl text-3xl font-bold text-center  ">
         Simplify your{" "}
         <span className="bg-gradient-to-r from-indigo-500 via-red-500 to-indigo-500  bg-clip-text text-transparent">
           Links
