@@ -8,7 +8,7 @@ const Header = () => {
 
   // console.log(user.photoURL);
   return (
-    <header className="  pt-5    sticky top-0 z-50 bg-gray-800/20 backdrop-blur-lg">
+    <header className=" pt-3 sticky top-0 z-50 bg-gray-800/20 backdrop-blur-lg">
       <div className="navbar xl:container mx-auto w-11/12 lg:w-11/12 md:w-11/12">
         <div className="navbar-start">
           <div className="dropdown">
