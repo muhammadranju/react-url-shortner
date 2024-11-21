@@ -2,11 +2,12 @@ import { useContext } from "react";
 import { CiLogin } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
+import Cookies from "js-cookie";
 
 const Header = () => {
-  const { user, isLoggedIn, signOutUser } = useContext(AuthContext);
-
-  // console.log(user.photoURL);
+  const { user, signOutUser } = useContext(AuthContext);
+  const cookie = Cookies.get("isLoggedIn");
+  console.log(cookie);
   return (
     <header className=" pt-3 sticky top-0 z-50 bg-gray-800/20 backdrop-blur-lg">
       <div className="navbar xl:container mx-auto w-11/12 lg:w-11/12 md:w-11/12">
@@ -32,7 +33,7 @@ const Header = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
-              {!isLoggedIn && !user && (
+              {!cookie ? (
                 <>
                   <Link
                     to={"/login"}
@@ -50,6 +51,8 @@ const Header = () => {
                     Register Now{" "}
                   </Link>
                 </>
+              ) : (
+                ""
               )}
             </ul>
           </div>
@@ -62,22 +65,27 @@ const Header = () => {
         </div>
 
         <div className="navbar-end gap-x-3">
-          {isLoggedIn && user && (
+          {cookie ? (
             <>
               <div>
                 <small className="underline">Welcome</small>
-                <h4 className="font-semibold">{user?.displayName}</h4>
+
+                <h4 className="font-semibold">
+                  {user?.displayName || "User Name"}
+                </h4>
               </div>
-              <div className="bg-white/90 p-1 rounded-full">
-                <img
-                  src={
-                    user?.photoURL ||
-                    "https://www.gravatar.com/avatar/2f0b64d14b2d2bf2c0b6e3d1b47d3a94?s=200&d=mp"
-                  }
-                  className="w-9 h-9 rounded-full"
-                  alt=""
-                />
-              </div>
+              <Link to={"/dashboard"}>
+                <div className="bg-white/90 p-1 rounded-full">
+                  <img
+                    src={
+                      user?.photoURL ||
+                      "https://www.gravatar.com/avatar/2f0b64d14b2d2bf2c0b6e3d1b47d3a94?s=200&d=mp"
+                    }
+                    className="w-9 h-9 rounded-full"
+                    alt=""
+                  />
+                </div>
+              </Link>
 
               <Link
                 to={"/"}
@@ -90,9 +98,11 @@ const Header = () => {
                 </span>
               </Link>
             </>
+          ) : (
+            ""
           )}
 
-          {!isLoggedIn && !user && (
+          {!cookie ? (
             <>
               <Link
                 to={"/login"}
@@ -112,6 +122,8 @@ const Header = () => {
                 </Link>
               </div>
             </>
+          ) : (
+            ""
           )}
         </div>
       </div>
