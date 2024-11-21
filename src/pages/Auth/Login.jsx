@@ -1,7 +1,11 @@
 import { useContext, useState } from "react";
-import { Lock, Mail, Image } from "lucide-react";
-import { Link, Navigate } from "react-router-dom";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { Lock, Mail, Image, User } from "lucide-react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import {
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import toast from "react-hot-toast";
 import { auth } from "../../firebase/firebase.config";
 import { AuthContext } from "../../context/AuthProvider";
@@ -14,9 +18,11 @@ const Login = () => {
     photoURL: "",
   });
 
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { user, isLoggedIn, setIsLoggedIn, setLoading } =
+    useContext(AuthContext);
 
-  if (isLoggedIn) {
+  if (user || isLoggedIn) {
     return <Navigate to="/" />;
   }
 
@@ -29,13 +35,14 @@ const Login = () => {
     }));
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+
     setFormData((prev) => ({
       ...prev,
       emailError: "",
       passwordError: "",
     }));
-    e.preventDefault();
 
     if (!formData.email) {
       setFormData((prev) => ({
@@ -51,24 +58,34 @@ const Login = () => {
       return;
     }
 
+    console.log(User);
+    try {
+      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+
+      setLoading(false);
+      toast.success("User login Successfully!");
+      Cookies.set("isLoggedIn", true);
+      navigate(location.state ? location.state : "/");
+    } catch (error) {
+      if (error.message.includes("auth/invalid-credential")) {
+        toast.error("Invalid Credential email or password!");
+        return;
+      }
+    }
+
     setFormData((prev) => ({
       ...prev,
       emailError: "",
       passwordError: "",
     }));
-
-    console.log(formData.email, formData.password);
   };
 
-  console.log(isLoggedIn);
   const handleGoogleSignIn = async () => {
-    // Placeholder for Google Sign-In logic
     const googleProvider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, googleProvider);
       toast.success("User login Successfully!");
       Cookies.set("isLoggedIn", true);
-
       setIsLoggedIn(Cookies.get("isLoggedIn"));
       // navigate(location.state ? location.state : "/");
     } catch (error) {
@@ -77,7 +94,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen  flex items-center justify-center p-4">
+    <div className=" my-24 flex items-center justify-center p-4">
       <div className="bg-gray-800 shadow-2xl rounded-2xl w-full max-w-4xl flex overflow-hidden">
         {/* Illustration Section */}
         <div className="md:block hidden w-1/2 bg-gradient-to-tr from-indigo-600  p-8 flex items-center justify-center">

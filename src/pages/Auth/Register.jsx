@@ -1,12 +1,21 @@
 import { useContext, useState } from "react";
 import { Lock, Mail, User, Image } from "lucide-react";
-import { Link, Navigate } from "react-router-dom";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signOut,
+} from "firebase/auth";
 import toast from "react-hot-toast";
 import { auth } from "../../firebase/firebase.config";
 import { AuthContext } from "../../context/AuthProvider";
+import Cookies from "js-cookie";
 
 const RegistrationLoginPage = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -14,7 +23,9 @@ const RegistrationLoginPage = () => {
     photoURL: "",
   });
 
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, setIsLoggedIn, setLoading, setRefetch } =
+    useContext(AuthContext);
+
   if (isLoggedIn) {
     return <Navigate to="/" />;
   }
@@ -29,17 +40,77 @@ const RegistrationLoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+
+    setFormData((prev) => ({
+      ...prev,
+      emailError: "",
+      fullNameError: "",
+      passwordError: "",
+    }));
+
+    if (!formData.fullName) {
+      setFormData((prev) => ({
+        ...prev,
+        fullNameError: "Full Name is required",
+      }));
+      return;
+    } else if (!formData.email) {
+      setFormData((prev) => ({
+        ...prev,
+        emailError: "Email is required",
+      }));
+      return;
+    } else if (!formData.password) {
+      setFormData((prev) => ({
+        ...prev,
+        passwordError: "Password is required",
+      }));
+      return;
+    }
+
+    try {
+      await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+      await updateProfile(auth.currentUser, {
+        displayName: formData.fullName,
+      });
+
+      await signOut(auth);
+      navigate("/login");
+      setRefetch(Date.now());
+      setLoading(false);
+      toast.success("User Created Successfully!");
+    } catch (error) {
+      if (error.message.includes("auth/email")) {
+        toast.error("Email already in use!");
+      } else if (error.message.includes("auth/invalid")) {
+        toast.error("Invalid email!");
+      }
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      emailError: "",
+      fullNameError: "",
+      passwordError: "",
+    }));
   };
 
   const handleGoogleSignIn = async () => {
-    // Placeholder for Google Sign-In logic
-    console.log("Initiating Google Sign-In");
     const googleProvider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, googleProvider);
       toast.success("User login Successfully!");
-      // Cookies.set("isShown", true);
+      setRefetch(Date.now());
+
+      Cookies.set("isLoggedIn", true);
+      setIsLoggedIn(Cookies.get("isLoggedIn"));
+
+      // setIsLoggedIn(Cookies.get("isLoggedIn"));
       // navigate(location.state ? location.state : "/");
     } catch (error) {
       console.log(error);
@@ -47,7 +118,7 @@ const RegistrationLoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen  flex items-center justify-center p-4">
+    <div className=" my-24  flex items-center justify-center p-4">
       <div className="bg-gray-800 shadow-2xl rounded-2xl w-full max-w-4xl flex overflow-hidden">
         {/* Illustration Section */}
         <div className="md:block hidden w-1/2 bg-gradient-to-tr from-indigo-600  p-8 flex items-center justify-center">
@@ -76,20 +147,11 @@ const RegistrationLoginPage = () => {
                   placeholder="Full Name"
                   value={formData.fullName}
                   onChange={handleInputChange}
-                  required
                   className="w-full pl-10 pr-4 py-2 border rounded-lg bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-              </div>
-              <div className="relative">
-                <Image className="absolute left-3 top-3 text-gray-400" />
-                <input
-                  type="text"
-                  name="photoURL"
-                  placeholder="Profile Photo URL"
-                  value={formData.photoURL}
-                  onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none  bg-gray-800 focus:ring-2 focus:ring-blue-500"
-                />
+                <span className="text-red-500 text-xs">
+                  {formData.fullNameError}
+                </span>
               </div>
             </div>
 
@@ -101,9 +163,11 @@ const RegistrationLoginPage = () => {
                 placeholder="Email Address"
                 value={formData.email}
                 onChange={handleInputChange}
-                required
                 className="w-full bg-gray-800 pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              <span className="text-red-500 text-xs">
+                {formData.emailError}
+              </span>
             </div>
 
             <div className="relative">
@@ -114,9 +178,11 @@ const RegistrationLoginPage = () => {
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleInputChange}
-                required
                 className="w-full bg-gray-800 pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              <span className="text-red-500 text-xs">
+                {formData.passwordError}
+              </span>
             </div>
 
             <button
