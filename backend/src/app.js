@@ -6,9 +6,6 @@ const {
   controller: { errorHandler, notFount },
 } = require("./api/v1/global");
 
-// middleware.forEach((middleware) => {
-//   app.use(middleware);
-// });
 app.use([middleware, router]);
 
 app.use([notFount, errorHandler]);
