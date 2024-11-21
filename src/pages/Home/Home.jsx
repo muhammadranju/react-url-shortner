@@ -2,6 +2,7 @@
 // import Table from "../../components/Table/Table";
 import Banner from "../../components/Banner/Banner";
 import Heading from "../../components/Heading/Heading";
+import ManageLinks from "../../components/ManageLinks/ManageLinks";
 
 const Home = () => {
   return (
@@ -45,6 +46,7 @@ const Home = () => {
       </div> */}
 
       <Heading></Heading>
+      <ManageLinks></ManageLinks>
     </section>
   );
 };
