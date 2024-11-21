@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { MdOutlineChevronRight } from "react-icons/md";
 
 const Banner = () => {
   return (
@@ -6,17 +6,15 @@ const Banner = () => {
       <h2 className="lg:text-5xl text-3xl font-bold text-center bg-gradient-to-r from-indigo-500 via-red-500 to-indigo-500 bg-clip-text text-transparent">
         Simplify your Links
       </h2>
-      <p className="text-center">
+      <p className="text-center pt-3">
         Effortless link management with a user-friendly dashboard and robust
         analytics.
       </p>
-      <div className="flex items-center justify-center">
-        <button className="bg-blue-500 text-white py-2 px-4 rounded-full">
-          Get Started
+      <div className="flex items-center justify-center mt-7">
+        <button className="bg-gradient-to-tl from-blue-500 to-red-200 hover:bg-gradient-to-br  text-white py-1 rounded-md pl-6 pr-3 text-sm flex items-center gap-1">
+          Get Started <MdOutlineChevronRight className="text-4xl font-thin" />
         </button>
-        <button>Deploy with Helm</button>
       </div>
-      <Link className="text-center">Official Documentation</Link>
     </div>
   );
 };

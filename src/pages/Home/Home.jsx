@@ -1,6 +1,7 @@
 // import { IoIosLink } from "react-icons/io";
 // import Table from "../../components/Table/Table";
 import Banner from "../../components/Banner/Banner";
+import Heading from "../../components/Heading/Heading";
 
 const Home = () => {
   return (
@@ -42,6 +43,8 @@ const Home = () => {
           Next+
         </button>
       </div> */}
+
+      <Heading></Heading>
     </section>
   );
 };
