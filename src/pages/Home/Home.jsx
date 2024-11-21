@@ -1,10 +1,11 @@
-import { IoIosLink } from "react-icons/io";
-import Table from "../../components/Table/Table";
+// import { IoIosLink } from "react-icons/io";
+// import Table from "../../components/Table/Table";
+import Banner from "../../components/Banner/Banner";
 
 const Home = () => {
   return (
     <section className="mt-10">
-      <div className="flex flex-col items-center gap-y-3 justify-center">
+      {/* <div className="flex flex-col items-center gap-y-3 justify-center">
         <h1 className="lg:text-5xl text-3xl font-bold text-center bg-gradient-to-r from-indigo-500 via-red-500 to-indigo-500 bg-clip-text text-transparent">
           Shorten Your Loooong Links :)
         </h1>
@@ -28,8 +29,8 @@ const Home = () => {
           You can create <span className="font-bold text-pink-500">05</span>{" "}
           more links. Register Now to enjoy Unlimited usage
         </p>
-      </div>
-
+      </div> */}
+      <Banner></Banner>
       {/* <Table />
 
       <div className="flex justify-center mt-10 gap-x-3">
