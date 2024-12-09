@@ -1,8 +1,35 @@
-# React + Vite
+## Title: React URL Shortner
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description: A URL shortener application built using React, Node.js, and Firebase. The application allows users to create and manage URLs, track clicks, and share URLs with others. It also includes features for bookmarking, favorites, and analytics.
 
-Currently, two official plugins are available:
+## Features:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- User authentication and registration
+- URL shortening functionality
+- URL click tracking
+- URL analytics
+- URL sharing
+- URL bookmarking
+- URL favorites
+
+## Technologies Used:
+
+- React
+- Node.js
+- Firebase
+- Express
+- MongoDB
+- Vite
+- DaisyUI
+
+## Deployment:
+
+To deploy the application, you need to have Node.js and MongoDB installed on your machine. Then, follow these steps:
+
+## Live Link:
+
+# [React URL Shortner](https://react-url-shortener.vercel.app/)
+
+## Screenshots:
+
+![Screenshot 1](./public/screenshort/home.jpeg)
