@@ -1,6 +1,8 @@
 ## Title: React URL Shortner
 
-## Description: A URL shortener application built using React, Node.js, and Firebase. The application allows users to create and manage URLs, track clicks, and share URLs with others. It also includes features for bookmarking, favorites, and analytics.
+## Description:
+
+- A URL shortener application built using React, Node.js, and Firebase. The application allows users to create and manage URLs, track clicks, and share URLs with others. It also includes features for bookmarking, favorites, and analytics.
 
 ## Features:
 
@@ -32,4 +34,4 @@ To deploy the application, you need to have Node.js and MongoDB installed on you
 
 ## Screenshots:
 
-![Screenshot 1](./public/screenshort/home.jpeg)
+![Screenshot 1](/public/screenshort/home.jpeg)
