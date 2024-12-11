@@ -30,7 +30,7 @@ To deploy the application, you need to have Node.js and MongoDB installed on you
 
 ## Live Link:
 
-# [React URL Shortner](https://react-url-shortener.vercel.app/)
+# [React URL Shortner](https://react-node-url-shortener.netlify.app)
 
 ## Screenshots:
 
