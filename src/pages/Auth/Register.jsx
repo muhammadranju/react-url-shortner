@@ -115,7 +115,10 @@ const RegistrationLoginPage = () => {
 
       if (userCredential.user) {
         const userData = prepareUserData();
-        await axios.post("http://localhost:3000/v1/api/users", userData);
+        await axios.post(
+          "https://react-url-shortner-eight.vercel.app/v1/api/users",
+          userData
+        );
       }
 
       // Sign out and navigate
@@ -155,7 +158,10 @@ const RegistrationLoginPage = () => {
         Cookies.set("isLoggedIn", true);
         setIsLoggedIn(Cookies.get("isLoggedIn"));
 
-        await axios.post("http://localhost:3000/v1/api/users", userData);
+        await axios.post(
+          "https://react-url-shortner-eight.vercel.app/v1/api/users",
+          userData
+        );
       }
     } catch (error) {
       console.log(error);
@@ -163,7 +169,7 @@ const RegistrationLoginPage = () => {
   };
 
   const handleGoogleAuth = () => {
-    window.location.href = "http://localhost:3000/google";
+    window.location.href = "https://react-url-shortner-eight.vercel.app/google";
   };
 
   return (

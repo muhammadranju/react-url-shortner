@@ -1,5 +1,6 @@
 import { MdOutlineChevronRight } from "react-icons/md";
 import { Button } from "@headlessui/react";
+import { Link } from "react-router-dom";
 
 const Banner = () => {
   return (
@@ -18,9 +19,11 @@ const Banner = () => {
         {/* <button className="bg-blue-500 text-white py-1 rounded-md pl-6 pr-3 text-sm flex items-center gap-1">
           Get Started 
         </button> */}
-        <Button className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
-          Get Started <MdOutlineChevronRight className="text-4xl font-thin" />
-        </Button>
+        <Link to="/dashboard">
+          <Button className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
+            Get Started <MdOutlineChevronRight className="text-4xl font-thin" />
+          </Button>
+        </Link>
       </div>
     </div>
   );
