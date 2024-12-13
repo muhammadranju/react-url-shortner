@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Lock, Mail, User, Image } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
@@ -13,18 +13,54 @@ import { auth } from "../../firebase/firebase.config";
 import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
 
+import axios from "axios";
+
 const RegistrationLoginPage = () => {
+  const [ip, setIp] = useState("");
   const navigate = useNavigate();
+
+  const { isLoggedIn, setIsLoggedIn, setLoading, setRefetch } =
+    useContext(AuthContext);
+  useEffect(() => {
+    const fetchIp = async () => {
+      try {
+        const response = await axios.get("https://api.ipify.org?format=json");
+        setIp(response.data.ip);
+      } catch (error) {
+        console.error("Error fetching the IP address:", error);
+      }
+    };
+
+    fetchIp();
+  }, []);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const token = searchParams.get("token");
+
+    if (token) {
+      // Store the JWT token in cookies
+      Cookies.set("token", token, { expires: 1, secure: true }); // Expires in 1 day, secure flag for HTTPS
+      Cookies.set("isLoggedIn", true);
+
+      // Update login state
+      setIsLoggedIn(Cookies.get("isLoggedIn"));
+      setRefetch(Date.now());
+      toast.success("User logged in successfully with Google!");
+
+      // Clear the token from the query string and navigate
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, [setIsLoggedIn, setRefetch]);
 
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
-    photoURL: "",
+    fullNameError: "",
+    emailError: "",
+    passwordError: "",
   });
-
-  const { isLoggedIn, setIsLoggedIn, setLoading, setRefetch } =
-    useContext(AuthContext);
 
   if (isLoggedIn) {
     return <Navigate to="/" />;
@@ -35,86 +71,99 @@ const RegistrationLoginPage = () => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+      [`${name}Error`]: "", // Clear any existing error
     }));
+  };
+
+  const prepareUserData = (additionalData = {}) => {
+    return {
+      name: formData.fullName,
+      email: formData.email,
+      ip: ip,
+      ...additionalData,
+    };
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setFormData((prev) => ({
-      ...prev,
-      emailError: "",
-      fullNameError: "",
-      passwordError: "",
-    }));
-
-    if (!formData.fullName) {
+    // Validate form
+    if (!formData.fullName || !formData.email || !formData.password) {
       setFormData((prev) => ({
         ...prev,
-        fullNameError: "Full Name is required",
-      }));
-      return;
-    } else if (!formData.email) {
-      setFormData((prev) => ({
-        ...prev,
-        emailError: "Email is required",
-      }));
-      return;
-    } else if (!formData.password) {
-      setFormData((prev) => ({
-        ...prev,
-        passwordError: "Password is required",
+        fullNameError: !formData.fullName ? "Full Name is required" : "",
+        emailError: !formData.email ? "Email is required" : "",
+        passwordError: !formData.password ? "Password is required" : "",
       }));
       return;
     }
 
     try {
-      await createUserWithEmailAndPassword(
+      // Firebase User Creation
+
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         formData.email,
         formData.password
       );
 
-      await updateProfile(auth.currentUser, {
+      await updateProfile(userCredential.user, {
         displayName: formData.fullName,
       });
 
+      // Prepare and Send User Data to Backend
+
+      if (userCredential.user) {
+        const userData = prepareUserData();
+        await axios.post("http://localhost:3000/v1/api/users", userData);
+      }
+
+      // Sign out and navigate
       await signOut(auth);
       navigate("/login");
+
       setRefetch(Date.now());
       setLoading(false);
       toast.success("User Created Successfully!");
     } catch (error) {
-      if (error.message.includes("auth/email")) {
+      if (error.code === "auth/email-already-in-use") {
         toast.error("Email already in use!");
-      } else if (error.message.includes("auth/invalid")) {
+      } else if (error.code === "auth/invalid-email") {
         toast.error("Invalid email!");
+      } else {
+        toast.error("Registration failed. Please try again.");
       }
     }
-
-    setFormData((prev) => ({
-      ...prev,
-      emailError: "",
-      fullNameError: "",
-      passwordError: "",
-    }));
   };
 
   const handleGoogleSignIn = async () => {
     const googleProvider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, googleProvider);
-      toast.success("User login Successfully!");
-      setRefetch(Date.now());
+      const googleLogin = await signInWithPopup(auth, googleProvider);
+      const user = googleLogin.user;
 
-      Cookies.set("isLoggedIn", true);
-      setIsLoggedIn(Cookies.get("isLoggedIn"));
+      const userData = prepareUserData({
+        photoURL: user.photoURL,
+        providerData: user.providerData,
+      });
 
-      // setIsLoggedIn(Cookies.get("isLoggedIn"));
-      // navigate(location.state ? location.state : "/");
+      console.log(user.providerData[0].email);
+      if (user) {
+        toast.success("User login Successfully!");
+        setRefetch(Date.now());
+
+        Cookies.set("isLoggedIn", true);
+        setIsLoggedIn(Cookies.get("isLoggedIn"));
+
+        await axios.post("http://localhost:3000/v1/api/users", userData);
+      }
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleGoogleAuth = () => {
+    window.location.href = "http://localhost:3000/google";
   };
 
   return (
@@ -200,7 +249,7 @@ const RegistrationLoginPage = () => {
 
             <button
               type="button"
-              onClick={handleGoogleSignIn}
+              onClick={handleGoogleAuth}
               className="w-full flex items-center justify-center text-white border border-gray-300  py-3 rounded-lg transition-all"
             >
               <svg
@@ -230,6 +279,7 @@ const RegistrationLoginPage = () => {
               Sign up with Google
             </button>
 
+            {/* <button onClick={handleGoogleAuth}>Google</button> */}
             <div className="text-center">
               <Link to="/login">
                 <button type="button" className="text-blue-600 hover:underline">

@@ -3,11 +3,13 @@ import { CiLogin } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
+import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher";
 
 const Header = () => {
   const { user, signOutUser } = useContext(AuthContext);
   const cookie = Cookies.get("isLoggedIn");
-  console.log(cookie);
+  console.log(user);
+
   return (
     <header className=" pt-3 sticky top-0 z-50 bg-gray-800/20 backdrop-blur-lg">
       <div className="navbar xl:container mx-auto w-11/12 lg:w-11/12 md:w-11/12">
@@ -126,6 +128,7 @@ const Header = () => {
             ""
           )}
         </div>
+        <ThemeSwitcher />
       </div>
     </header>
   );

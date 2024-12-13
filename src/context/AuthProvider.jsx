@@ -17,23 +17,40 @@ const AuthProvider = ({ children }) => {
   };
 
   const signOutUser = () => {
-    signOut(auth);
+    // signOut(auth);
     setUser(null);
     setLoading(false);
+    setIsLoggedIn(false);
     Cookies.remove("isLoggedIn");
+    Cookies.remove("token");
   };
 
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    // const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+    //   setUser(currentUser);
+    //   setLoading(false);
+    //   setIsLoggedIn(Cookies.get("isLoggedIn"));
+    // });
+
+    const verifyUser = async () => {
       setLoading(false);
       setIsLoggedIn(Cookies.get("isLoggedIn"));
-    });
-
-    return () => {
-      unSubscribe;
+      const res = await fetch("http://localhost:3000/verify", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: Cookies.get("token"),
+        },
+      });
+      const user = await res.json();
+      setUser(user.user);
     };
-  }, [refetch]);
+    verifyUser();
+
+    // return () => {
+    //   unSubscribe;
+    // };
+  }, [refetch, loading]);
 
   const values = {
     user,
