@@ -12,6 +12,7 @@ const createServer = http.createServer(app); // create server
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Hello World" });
 });
+
 app.get("/health", (req, res) => {
   res.status(200).json({ message: "Healthy" });
 });

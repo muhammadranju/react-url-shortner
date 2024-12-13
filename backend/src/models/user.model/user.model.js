@@ -4,50 +4,27 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
+      trim: true,
     },
     photoURL: {
       type: String,
+      default: null,
     },
     email: {
       type: String,
     },
 
-    userInfo: {
-      country: {
-        type: String,
-      },
-      state: {
-        type: String,
-      },
-      city: {
-        type: String,
-      },
-      location: {
-        type: String,
-      },
-      device: {
-        type: String,
-      },
-      browser: {
-        type: String,
-      },
-      ip: {
-        type: String,
-      },
-      os: {
-        type: String,
-      },
-      deviceType: {
-        type: String,
-      },
+    deviceInfo: {
+      type: Object,
     },
+    locationInfo: { type: Object },
 
-    userLinks: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Url",
-      default: [],
-    },
+    providerData: mongoose.Schema.Types.Mixed,
+
     dateTime: {
+      type: String,
+    },
+    googleId: {
       type: String,
     },
   },
