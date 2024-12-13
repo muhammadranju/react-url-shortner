@@ -1,6 +1,6 @@
 const User = require("../../../../models/user.model/user.model");
 const { UAParser } = require("ua-parser-js");
-const geoip = require("geoip-country");
+// const geoip = require("geoip-country");
 
 const create = async (req, res) => {
   try {
@@ -10,7 +10,7 @@ const create = async (req, res) => {
 
     const parser = new UAParser(req.headers["user-agent"]);
     const deviceInfo = parser.getResult();
-    const locationInfo = geoip.lookup(ip);
+    // const locationInfo = geoip.lookup(ip);
 
     const existingUser = await User.findOne({
       $or: [{ email }, { email: providerData[0].email }],
@@ -24,7 +24,7 @@ const create = async (req, res) => {
       email: providerData[0].email || email,
       photoURL: photoURL || null,
       deviceInfo,
-      locationInfo,
+      // locationInfo,
       providerData,
       registeredAt: new Date(),
     });
