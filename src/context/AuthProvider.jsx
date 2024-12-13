@@ -1,7 +1,5 @@
 /* eslint-disable react/prop-types */
 import { createContext, useEffect, useState } from "react";
-import { auth } from "../firebase/firebase.config";
-import { onAuthStateChanged, signOut } from "firebase/auth";
 import Cookies from "js-cookie";
 
 export const AuthContext = createContext(null);
@@ -17,7 +15,6 @@ const AuthProvider = ({ children }) => {
   };
 
   const signOutUser = () => {
-    // signOut(auth);
     setUser(null);
     setLoading(false);
     setIsLoggedIn(false);
@@ -26,12 +23,6 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-    //   setUser(currentUser);
-    //   setLoading(false);
-    //   setIsLoggedIn(Cookies.get("isLoggedIn"));
-    // });
-
     const verifyUser = async () => {
       setLoading(false);
       setIsLoggedIn(Cookies.get("isLoggedIn"));
@@ -49,10 +40,6 @@ const AuthProvider = ({ children }) => {
       setUser(user.user);
     };
     verifyUser();
-
-    // return () => {
-    //   unSubscribe;
-    // };
   }, [refetch, loading]);
 
   const values = {

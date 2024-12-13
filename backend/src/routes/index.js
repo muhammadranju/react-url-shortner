@@ -35,7 +35,6 @@ router.get(
   }
 );
 
-// router.route("/v1/api/users/verify").get();
 router.get("/verify", authMiddleware, (req, res) => {
   try {
     console.log(req.user);

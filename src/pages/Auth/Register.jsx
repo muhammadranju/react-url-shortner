@@ -2,8 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { Lock, Mail, User, Image } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
-  signInWithPopup,
-  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   updateProfile,
   signOut,
@@ -139,34 +137,34 @@ const RegistrationLoginPage = () => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    const googleProvider = new GoogleAuthProvider();
-    try {
-      const googleLogin = await signInWithPopup(auth, googleProvider);
-      const user = googleLogin.user;
+  // const handleGoogleSignIn = async () => {
+  //   const googleProvider = new GoogleAuthProvider();
+  //   try {
+  //     const googleLogin = await signInWithPopup(auth, googleProvider);
+  //     const user = googleLogin.user;
 
-      const userData = prepareUserData({
-        photoURL: user.photoURL,
-        providerData: user.providerData,
-      });
+  //     const userData = prepareUserData({
+  //       photoURL: user.photoURL,
+  //       providerData: user.providerData,
+  //     });
 
-      console.log(user.providerData[0].email);
-      if (user) {
-        toast.success("User login Successfully!");
-        setRefetch(Date.now());
+  //     console.log(user.providerData[0].email);
+  //     if (user) {
+  //       toast.success("User login Successfully!");
+  //       setRefetch(Date.now());
 
-        Cookies.set("isLoggedIn", true);
-        setIsLoggedIn(Cookies.get("isLoggedIn"));
+  //       Cookies.set("isLoggedIn", true);
+  //       setIsLoggedIn(Cookies.get("isLoggedIn"));
 
-        await axios.post(
-          "https://react-url-shortner-eight.vercel.app/v1/api/users",
-          userData
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //       await axios.post(
+  //         "https://react-url-shortner-eight.vercel.app/v1/api/users",
+  //         userData
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const handleGoogleAuth = () => {
     window.location.href = "https://react-url-shortner-eight.vercel.app/google";

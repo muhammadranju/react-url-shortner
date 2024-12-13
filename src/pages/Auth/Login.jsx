@@ -1,11 +1,7 @@
 import { useContext, useState } from "react";
 import { Lock, Mail, Image, User } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import {
-  GoogleAuthProvider,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import toast from "react-hot-toast";
 import { auth } from "../../firebase/firebase.config";
 import { AuthContext } from "../../context/AuthProvider";
@@ -19,8 +15,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
-  const { user, isLoggedIn, setIsLoggedIn, setLoading } =
-    useContext(AuthContext);
+  const { user, isLoggedIn, setLoading } = useContext(AuthContext);
 
   if (user || isLoggedIn) {
     return <Navigate to="/" />;
@@ -80,17 +75,8 @@ const Login = () => {
     }));
   };
 
-  const handleGoogleSignIn = async () => {
-    const googleProvider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, googleProvider);
-      toast.success("User login Successfully!");
-      Cookies.set("isLoggedIn", true);
-      setIsLoggedIn(Cookies.get("isLoggedIn"));
-      // navigate(location.state ? location.state : "/");
-    } catch (error) {
-      console.log(error);
-    }
+  const handleGoogleAuth = () => {
+    window.location.href = "https://react-url-shortner-eight.vercel.app/google";
   };
 
   return (
@@ -159,7 +145,7 @@ const Login = () => {
 
             <button
               type="button"
-              onClick={handleGoogleSignIn}
+              onClick={handleGoogleAuth}
               className="w-full flex items-center justify-center text-white border border-gray-300  py-3 rounded-lg transition-all"
             >
               <svg
