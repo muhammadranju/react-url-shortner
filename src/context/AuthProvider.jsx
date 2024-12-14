@@ -18,26 +18,49 @@ const AuthProvider = ({ children }) => {
     setUser(null);
     setLoading(false);
     setIsLoggedIn(false);
-    Cookies.remove("isLoggedIn");
-    Cookies.remove("token");
+    Cookies.remove("__myapp_isLoggedIn");
+    Cookies.remove("__myapp_user_updated");
+    Cookies.remove("__myapp_token");
   };
 
   useEffect(() => {
     const verifyUser = async () => {
-      setLoading(false);
-      setIsLoggedIn(Cookies.get("isLoggedIn"));
-      const res = await fetch(`${import.meta.env.VITE_BackendUrl}/verify`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: Cookies.get("token"),
-        },
-      });
-      const user = await res.json();
-      setUser(user.user);
+      try {
+        const token = Cookies.get("__myapp_token");
+        const isLoggedIn = Cookies.get("__myapp_isLoggedIn");
+        setLoading(true);
+
+        if (token && isLoggedIn) {
+          const res = await fetch(`${import.meta.env.VITE_BackendUrl}/verify`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: token,
+            },
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            setUser(data.user);
+            setIsLoggedIn(true);
+          } else {
+            setUser(null);
+            setIsLoggedIn(false);
+            Cookies.remove("__myapp_token");
+            Cookies.remove("__myapp_isLoggedIn");
+          }
+        } else {
+          setUser(null);
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        console.error("Error verifying user:", error);
+      } finally {
+        setLoading(false);
+      }
     };
     verifyUser();
-  }, [refetch, loading]);
+  }, [refetch]);
 
   const values = {
     user,
