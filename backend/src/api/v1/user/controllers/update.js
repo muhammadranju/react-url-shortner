@@ -1,7 +1,8 @@
 const { default: mongoose } = require("mongoose");
 const User = require("../../../../models/user.model/user.model");
 const { UAParser } = require("ua-parser-js");
-const geoip = require("geoip-country");
+// const geoip = require("geoip-country");
+const geoip = require("geoip-lite");
 
 const update = async (req, res) => {
   try {
