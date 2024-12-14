@@ -8,7 +8,6 @@ import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher";
 const Header = () => {
   const { user, signOutUser } = useContext(AuthContext);
   const cookie = Cookies.get("isLoggedIn");
-  console.log(user);
 
   return (
     <header className=" pt-3 sticky top-0 z-50 bg-gray-800/20 backdrop-blur-lg">

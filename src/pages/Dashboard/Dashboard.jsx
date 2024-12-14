@@ -1,34 +1,27 @@
 import { IoIosLink } from "react-icons/io";
 import Table from "../../components/Table/Table";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 
 const Dashboard = () => {
-  const [ip, setIp] = useState("");
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const userInfoUpdate = async () => {
-      const response = await fetch("https://api.ipify.org?format=json");
-      setIp(response.data.ip);
-      const res = await fetch(
-        `${import.meta.env.VITE_BackendUrl}/v1/api/users/${user._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ip: ip,
-          }),
-        }
-      );
+      const res = await fetch(`http://localhost:3000/v1/api/users/${user.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const userInfo = await res.json();
       console.log(userInfo);
     };
 
     userInfoUpdate();
-  }, []);
+  }, [user.id]);
+
+  console.log(user);
 
   return (
     <section className="mt-10">

@@ -2,16 +2,16 @@ const { default: mongoose } = require("mongoose");
 const User = require("../../../../models/user.model/user.model");
 const { UAParser } = require("ua-parser-js");
 // const geoip = require("geoip-country");
-// const geoip = require("geoip-lite");
+const geoip = require("geoip-lite");
 
 const update = async (req, res) => {
   try {
-    const { ip } = req.body;
     const { userId } = req.params;
+    const userIP = req.clientIp;
 
     const parser = new UAParser(req.headers["user-agent"]);
     const deviceInfo = parser.getResult();
-    // const locationInfo = geoip.lookup(ip);
+    const locationInfo = geoip.lookup(userIP);
 
     const isValidId = mongoose.Types.ObjectId.isValid(userId);
     if (!isValidId) {
@@ -25,10 +25,8 @@ const update = async (req, res) => {
     const findUser = await User.findOne({ _id: userId });
     if (findUser) {
       findUser.deviceInfo = deviceInfo;
-      findUser.ip = ip;
       findUser.registeredAt = new Date();
-      //   findUser.locationInfo = locationInfo;
-      // locationInfo,
+      findUser.locationInfo = locationInfo;
 
       await findUser.save();
 

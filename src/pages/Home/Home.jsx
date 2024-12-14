@@ -1,5 +1,6 @@
 // import { IoIosLink } from "react-icons/io";
 // import Table from "../../components/Table/Table";
+
 import AdvancedAnalytics from "../../components/AdvancedAnalytics/AdvancedAnalytics";
 import Banner from "../../components/Banner/Banner";
 import Heading from "../../components/Heading/Heading";

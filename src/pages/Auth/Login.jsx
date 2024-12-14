@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Lock, Mail, Image, User } from "lucide-react";
+import { Lock, Mail, Image } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import toast from "react-hot-toast";
@@ -53,7 +53,6 @@ const Login = () => {
       return;
     }
 
-    console.log(User);
     try {
       await signInWithEmailAndPassword(auth, formData.email, formData.password);
 
