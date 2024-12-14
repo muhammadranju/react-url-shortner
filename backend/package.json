@@ -4,8 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node index.js",
-    "build": "npm install && cp -r ./node_modules/geoip-country/data ./build/data"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
