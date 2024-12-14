@@ -76,7 +76,7 @@ const Login = () => {
   };
 
   const handleGoogleAuth = () => {
-    window.location.href = "https://react-url-shortner-eight.vercel.app/google";
+    window.location.href = `${import.meta.env.VITE_BackendUrl}/google`;
   };
 
   return (

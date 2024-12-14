@@ -29,9 +29,7 @@ router.get(
       { expiresIn: "1h" }
     );
 
-    res.redirect(
-      `https://react-node-url-shortener.netlify.app/register?token=${token}`
-    );
+    res.redirect(`${process.env.FRONTEND_URL}/register?token=${token}`);
   }
 );
 

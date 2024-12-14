@@ -114,7 +114,7 @@ const RegistrationLoginPage = () => {
       if (userCredential.user) {
         const userData = prepareUserData();
         await axios.post(
-          "https://react-url-shortner-eight.vercel.app/v1/api/users",
+          `${import.meta.env.VITE_BackendUrl}/v1/api/users`,
           userData
         );
       }
@@ -157,7 +157,7 @@ const RegistrationLoginPage = () => {
   //       setIsLoggedIn(Cookies.get("isLoggedIn"));
 
   //       await axios.post(
-  //         "https://react-url-shortner-eight.vercel.app/v1/api/users",
+  //         "${import.meta.env.VITE_BackendUrl}/v1/api/users",
   //         userData
   //       );
   //     }
@@ -167,7 +167,7 @@ const RegistrationLoginPage = () => {
   // };
 
   const handleGoogleAuth = () => {
-    window.location.href = "https://react-url-shortner-eight.vercel.app/google";
+    window.location.href = `${import.meta.env.VITE_BackendUrl}/google`;
   };
 
   return (

@@ -4,7 +4,6 @@ const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const bcrypt = require("bcryptjs");
 const User = require("../models/user.model/user.model");
-
 // Passport Local Strategy
 module.exports = function (passport) {
   // Local Strategy
@@ -45,6 +44,7 @@ module.exports = function (passport) {
       async (accessToken, refreshToken, profile, done) => {
         try {
           let user = await User.findOne({ googleId: profile.id });
+
           if (!user) {
             user = await User.create({
               googleId: profile.id,

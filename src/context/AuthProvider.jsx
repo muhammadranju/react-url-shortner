@@ -26,16 +26,13 @@ const AuthProvider = ({ children }) => {
     const verifyUser = async () => {
       setLoading(false);
       setIsLoggedIn(Cookies.get("isLoggedIn"));
-      const res = await fetch(
-        "https://react-url-shortner-eight.vercel.app/verify",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: Cookies.get("token"),
-          },
-        }
-      );
+      const res = await fetch(`${import.meta.env.VITE_BackendUrl}/verify`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: Cookies.get("token"),
+        },
+      });
       const user = await res.json();
       setUser(user.user);
     };
