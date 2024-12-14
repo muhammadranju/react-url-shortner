@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "npm install && cp -r ./node_modules/geoip-country/data ./build/data"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +19,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "geoip-country": "^5.0.202412062342",
+    "geoip-country": "^5.0.202412102342",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.30.1",
     "mongoose": "^8.8.4",

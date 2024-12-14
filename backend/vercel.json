@@ -12,5 +12,11 @@
       "dest": "/index.js",
       "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
     }
-  ]
+  ],
+
+  "functions": {
+    "api/*": {
+      "includeFiles": "node_modules/geoip-country/data/geoip-country.dat"
+    }
+  }
 }
