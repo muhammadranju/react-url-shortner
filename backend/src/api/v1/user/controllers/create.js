@@ -1,45 +1,59 @@
 const User = require("../../../../models/user.model/user.model");
 const { UAParser } = require("ua-parser-js");
-// const geoip = require("geoip-country");
+const bcrypt = require("bcryptjs");
 
 const create = async (req, res) => {
   try {
-    const { name, email, photoURL, providerData, ip } = req.body;
-
-    console.log(email);
+    const { name, email, password } = req.body;
 
     const parser = new UAParser(req.headers["user-agent"]);
     const deviceInfo = parser.getResult();
-    // const locationInfo = geoip.lookup(ip);
 
-    const existingUser = await User.findOne({
-      $or: [{ email }, { email: providerData[0].email }],
-    });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({
+        status: 400,
+        success: false,
+        message: "This email is already in use",
+      });
     }
 
-    const newUser = new User({
-      name: providerData[0].displayName || name,
-      email: providerData[0].email || email,
-      photoURL: photoURL || null,
-      deviceInfo,
-      // locationInfo,
-      providerData,
-      registeredAt: new Date(),
-    });
+    const genSalt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, genSalt);
 
-    // Save user to database
-    await newUser.save();
+    if (!hashedPassword) {
+      return res.status(500).json({
+        status: 500,
+        success: false,
+        message: "Error hashing password",
+      });
+    }
+
+    const user = User({
+      name,
+      email,
+      password: hashedPassword,
+      deviceInfo,
+    });
+    await user.save();
+
+    const userData = {
+      name: user.name,
+      email: user.email,
+      deviceInfo: user.deviceInfo,
+    };
 
     return res.status(201).json({
+      status: 201,
+      success: true,
       message: "User created successfully",
-      userId: newUser._id,
-      user: newUser,
+      userData,
     });
   } catch (error) {
     console.error("User creation error:", error);
     return res.status(500).json({
+      status: 500,
+      success: false,
       message: "Error creating user",
       error: error.message,
     });

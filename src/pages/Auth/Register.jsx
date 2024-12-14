@@ -1,170 +1,77 @@
 import { useContext, useEffect, useState } from "react";
 import { Lock, Mail, User, Image } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-  signOut,
-} from "firebase/auth";
+
 import toast from "react-hot-toast";
-import { auth } from "../../firebase/firebase.config";
 import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
-
-import axios from "axios";
+import { useForm } from "react-hook-form";
 
 const RegistrationLoginPage = () => {
-  const [ip, setIp] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isErrors, setErrors] = useState("");
   const navigate = useNavigate();
 
-  const { isLoggedIn, setIsLoggedIn, setLoading, setRefetch } =
-    useContext(AuthContext);
-  useEffect(() => {
-    const fetchIp = async () => {
-      try {
-        const response = await axios.get("https://api.ipify.org?format=json");
-        setIp(response.data.ip);
-      } catch (error) {
-        console.error("Error fetching the IP address:", error);
-      }
-    };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-    fetchIp();
-  }, []);
+  const { isLoggedIn, setIsLoggedIn, setRefetch } = useContext(AuthContext);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const token = searchParams.get("token");
 
     if (token) {
-      // Store the JWT token in cookies
-      Cookies.set("token", token, { expires: 1, secure: true }); // Expires in 1 day, secure flag for HTTPS
-      Cookies.set("isLoggedIn", true);
+      Cookies.set("__myapp_token", token, { expires: 30, secure: true }); // Expires in 30 day, secure flag for HTTPS
+      Cookies.set("__myapp_isLoggedIn", true);
+      Cookies.set("__myapp_user_updated", false);
 
-      // Update login state
-      setIsLoggedIn(Cookies.get("isLoggedIn"));
+      setIsLoggedIn(Cookies.get("__myapp_isLoggedIn"));
       setRefetch(Date.now());
       toast.success("User logged in successfully with Google!");
-
-      // Clear the token from the query string and navigate
       window.history.replaceState(null, "", window.location.pathname);
     }
   }, [setIsLoggedIn, setRefetch]);
-
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-    fullNameError: "",
-    emailError: "",
-    passwordError: "",
-  });
 
   if (isLoggedIn) {
     return <Navigate to="/" />;
   }
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-      [`${name}Error`]: "", // Clear any existing error
-    }));
-  };
+  const handlerRegister = async (data) => {
+    setIsSubmitting(true);
+    const name = data.fullName;
+    const email = data.email;
+    const password = data.password;
 
-  const prepareUserData = (additionalData = {}) => {
-    return {
-      name: formData.fullName,
-      email: formData.email,
-      ip: ip,
-      ...additionalData,
-    };
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Validate form
-    if (!formData.fullName || !formData.email || !formData.password) {
-      setFormData((prev) => ({
-        ...prev,
-        fullNameError: !formData.fullName ? "Full Name is required" : "",
-        emailError: !formData.email ? "Email is required" : "",
-        passwordError: !formData.password ? "Password is required" : "",
-      }));
-      return;
-    }
-
-    try {
-      // Firebase User Creation
-
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password
-      );
-
-      await updateProfile(userCredential.user, {
-        displayName: formData.fullName,
-      });
-
-      // Prepare and Send User Data to Backend
-
-      if (userCredential.user) {
-        const userData = prepareUserData();
-        await axios.post(
-          `${import.meta.env.VITE_BackendUrl}/v1/api/users`,
-          userData
-        );
+    const response = await fetch(
+      `${import.meta.env.VITE_BackendUrl}/v1/api/users`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: Cookies.get("__myapp_token"),
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          password: password,
+        }),
       }
+    );
 
-      // Sign out and navigate
-      await signOut(auth);
+    const result = await response.json();
+
+    if (result.success) {
+      toast.success("User created successfully!");
+      Cookies.set("__myapp_user_updated", false);
       navigate("/login");
-
-      setRefetch(Date.now());
-      setLoading(false);
-      toast.success("User Created Successfully!");
-    } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
-        toast.error("Email already in use!");
-      } else if (error.code === "auth/invalid-email") {
-        toast.error("Invalid email!");
-      } else {
-        toast.error("Registration failed. Please try again.");
-      }
     }
+    setErrors(result.message);
+    setIsSubmitting(false);
   };
-
-  // const handleGoogleSignIn = async () => {
-  //   const googleProvider = new GoogleAuthProvider();
-  //   try {
-  //     const googleLogin = await signInWithPopup(auth, googleProvider);
-  //     const user = googleLogin.user;
-
-  //     const userData = prepareUserData({
-  //       photoURL: user.photoURL,
-  //       providerData: user.providerData,
-  //     });
-
-  //     console.log(user.providerData[0].email);
-  //     if (user) {
-  //       toast.success("User login Successfully!");
-  //       setRefetch(Date.now());
-
-  //       Cookies.set("isLoggedIn", true);
-  //       setIsLoggedIn(Cookies.get("isLoggedIn"));
-
-  //       await axios.post(
-  //         "${import.meta.env.VITE_BackendUrl}/v1/api/users",
-  //         userData
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   const handleGoogleAuth = () => {
     window.location.href = `${import.meta.env.VITE_BackendUrl}/google`;
@@ -186,7 +93,7 @@ const RegistrationLoginPage = () => {
 
         {/* Form Section */}
         <div className="w-full md:w-1/2 p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(handlerRegister)} className="space-y-6">
             <h1 className="text-3xl font-bold text-center text-gray-800">
               Register
             </h1>
@@ -198,13 +105,23 @@ const RegistrationLoginPage = () => {
                   type="text"
                   name="fullName"
                   placeholder="Full Name"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
                   className="w-full pl-10 pr-4 py-2 border rounded-lg bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  {...register("fullName", {
+                    required: {
+                      value: true,
+                      message: "Full Name is required.",
+                    },
+                    minLength: {
+                      value: 3,
+                      message: "Full Name must be at least 3 characters.",
+                    },
+                  })}
                 />
-                <span className="text-red-500 text-xs">
-                  {formData.fullNameError}
-                </span>
+                {errors.fullName && (
+                  <span className="text-red-500 text-xs mt-1 font-medium">
+                    {errors.fullName.message}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -214,13 +131,28 @@ const RegistrationLoginPage = () => {
                 type="email"
                 name="email"
                 placeholder="Email Address"
-                value={formData.email}
-                onChange={handleInputChange}
                 className="w-full bg-gray-800 pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                {...register("email", {
+                  required: {
+                    value: true,
+                    message: "Email is required.",
+                  },
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address.",
+                  },
+                })}
               />
-              <span className="text-red-500 text-xs">
-                {formData.emailError}
-              </span>
+              {errors.email && (
+                <span className="text-red-500 text-xs block mt-1 font-medium">
+                  {errors.email.message}
+                </span>
+              )}
+              {isErrors && (
+                <span className="text-red-500 text-xs block mt-1 font-medium">
+                  {isErrors}
+                </span>
+              )}
             </div>
 
             <div className="relative">
@@ -229,18 +161,34 @@ const RegistrationLoginPage = () => {
                 type="password"
                 name="password"
                 placeholder="Password"
-                value={formData.password}
-                onChange={handleInputChange}
                 className="w-full bg-gray-800 pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                {...register("password", {
+                  required: {
+                    value: true,
+                    message: "Password is required",
+                  },
+                  minLength: {
+                    value: 8,
+                    message: "Password must be at least 8 characters",
+                  },
+                  pattern: {
+                    value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])/,
+                    message:
+                      "Password must contain at least one uppercase letter, lowercase letter, and number",
+                  },
+                })}
               />
-              <span className="text-red-500 text-xs">
-                {formData.passwordError}
-              </span>
+              {errors.password && (
+                <span className="text-red-500 text-xs block mt-1 font-medium">
+                  {errors.password.message}
+                </span>
+              )}
             </div>
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg hover:opacity-90 transition-all"
+              className={`w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg hover:opacity-90 transition-all`}
+              disabled={isSubmitting}
             >
               Create Account
             </button>

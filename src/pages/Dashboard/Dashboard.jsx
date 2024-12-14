@@ -1,30 +1,73 @@
 import { IoIosLink } from "react-icons/io";
 import Table from "../../components/Table/Table";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthProvider";
+import Cookies from "js-cookie";
+import { RotatingLines } from "react-loader-spinner";
 
 const Dashboard = () => {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
+  // const [isCookeUpdated, setIsCookeUpdated] = useState(false);
+  const urlRef = useRef(null);
+  const isCookeUpdated = Cookies.get("__myapp_user_updated");
 
   useEffect(() => {
     const userInfoUpdate = async () => {
-      const res = await fetch(
-        `${import.meta.env.VITE_BackendUrl}/v1/api/users/${user.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const userInfo = await res.json();
-      console.log(userInfo);
+      if (!isCookeUpdated) {
+        const res = await fetch(
+          `${import.meta.env.VITE_BackendUrl}/v1/api/users/${user.id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        await res.json();
+        // setIsCookeUpdated(true);
+        Cookies.set("__myapp_user_updated", true);
+      }
     };
 
     userInfoUpdate();
-  }, [user.id]);
+  }, [user.id, isCookeUpdated]);
 
-  console.log(user);
+  const handelURLSubmit = async () => {
+    const res = await fetch(
+      `${import.meta.env.VITE_BackendUrl}/v1/api/short-urls`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: Cookies.get("__myapp_token"),
+        },
+        body: JSON.stringify({
+          originalUrl: urlRef.current.value,
+        }),
+      }
+    );
+    const data = await res.json();
+    console.log(data);
+    console.log(urlRef.current.value);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center mt-72">
+        <RotatingLines
+          visible={true}
+          height="96"
+          width="96"
+          strokeColor="#6366f1"
+          strokeWidth="5"
+          animationDuration="0.75"
+          ariaLabel="rotating-lines-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+        />
+      </div>
+    );
+  }
 
   return (
     <section className="mt-10">
@@ -38,11 +81,23 @@ const Dashboard = () => {
         </p>
 
         <div className="w-full lg:max-w-xl mt-5">
-          <label className="input input-bordered rounded-full bg-gray-800   relative flex items-center">
-            <IoIosLink className="mr-2 text-xl" />
+          <label className="flex items-center relative w-full">
+            <div className="absolute left-3 text-xl text-gray-500">
+              <IoIosLink />
+            </div>
 
-            <input type="text" placeholder="Enter the link here " />
-            <button className="btn rounded-full right-0 absolute  bg-blue-500 text-white font-bold hover:bg-blue-600">
+            <input
+              type="text"
+              ref={urlRef}
+              name="url"
+              placeholder="Enter the link here"
+              className="w-full pl-10 pr-28 py-3 rounded-full bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            <button
+              onClick={handelURLSubmit}
+              className="absolute right-0 top-0 bottom-0 m-1 px-4 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600"
+            >
               Shorten Now!
             </button>
           </label>

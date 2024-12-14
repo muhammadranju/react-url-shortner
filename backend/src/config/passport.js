@@ -43,7 +43,9 @@ module.exports = function (passport) {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          let user = await User.findOne({ googleId: profile.id });
+          let user = await User.findOne({
+            $or: [{ googleId: profile.id }, { email: profile.emails[0].value }],
+          });
 
           if (!user) {
             user = await User.create({
@@ -51,8 +53,13 @@ module.exports = function (passport) {
               name: profile.displayName,
               email: profile.emails[0].value,
               photoURL: profile.photos[0].value,
+              accountType: "GOOGLE",
             });
           }
+          user.photoURL = profile.photos[0].value;
+          user.googleId = profile.id;
+          user.accountType = "GOOGLE";
+          await user.save();
           return done(null, user);
         } catch (error) {
           return done(error, null);

@@ -1,77 +1,58 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Lock, Mail, Image } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import toast from "react-hot-toast";
-import { auth } from "../../firebase/firebase.config";
 import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
+import { useForm } from "react-hook-form";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    photoURL: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const navigate = useNavigate();
-  const { user, isLoggedIn, setLoading } = useContext(AuthContext);
+  const { user, isLoggedIn } = useContext(AuthContext);
 
   if (user || isLoggedIn) {
     return <Navigate to="/" />;
   }
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handlerLogin = async (data) => {
+    const email = data.email;
+    const password = data.password;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleLoginSubmit = async (e) => {
-    e.preventDefault();
-
-    setFormData((prev) => ({
-      ...prev,
-      emailError: "",
-      passwordError: "",
-    }));
-
-    if (!formData.email) {
-      setFormData((prev) => ({
-        ...prev,
-        emailError: "Email is required",
-      }));
-      return;
-    } else if (!formData.password) {
-      setFormData((prev) => ({
-        ...prev,
-        passwordError: "Password is required",
-      }));
-      return;
-    }
-
-    try {
-      await signInWithEmailAndPassword(auth, formData.email, formData.password);
-
-      setLoading(false);
-      toast.success("User login Successfully!");
-      Cookies.set("isLoggedIn", true);
-      navigate(location.state ? location.state : "/");
-    } catch (error) {
-      if (error.message.includes("auth/invalid-credential")) {
-        toast.error("Invalid Credential email or password!");
-        return;
+    const response = await fetch(
+      `${import.meta.env.VITE_BackendUrl}/v1/api/users/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: Cookies.get("__myapp_token"),
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
       }
+    );
+
+    const result = await response.json();
+
+    console.log(result.userData.token);
+
+    if (result.success) {
+      toast.success("User login Successfully!");
+      Cookies.set("__myapp_user_updated", false);
+      Cookies.set("__myapp_token", result.userData.token);
+      Cookies.set("__myapp_isLoggedIn", true);
+
+      navigate("/");
     }
 
-    setFormData((prev) => ({
-      ...prev,
-      emailError: "",
-      passwordError: "",
-    }));
+    console.log(email, password);
   };
 
   const handleGoogleAuth = () => {
@@ -94,7 +75,7 @@ const Login = () => {
 
         {/* Form Section */}
         <div className="w-full md:w-1/2 p-8">
-          <form onSubmit={handleLoginSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(handlerLogin)} className="space-y-6">
             <h1 className="text-3xl font-bold text-center text-gray-800">
               Login
             </h1>
@@ -105,13 +86,23 @@ const Login = () => {
                 type="email"
                 name="email"
                 placeholder="Email Address"
-                value={formData.email}
-                onChange={handleInputChange}
                 className="w-full bg-gray-800 pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                {...register("email", {
+                  required: {
+                    value: true,
+                    message: "Email is required.",
+                  },
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address.",
+                  },
+                })}
               />
-              <span className="text-red-500 text-xs">
-                {formData.emailError}
-              </span>
+              {errors.email && (
+                <span className="text-red-500 text-xs block mt-1 font-medium">
+                  {errors.email.message}
+                </span>
+              )}
             </div>
 
             <div className="relative">
@@ -120,13 +111,19 @@ const Login = () => {
                 type="password"
                 name="password"
                 placeholder="Password"
-                value={formData.password}
-                onChange={handleInputChange}
                 className="w-full bg-gray-800 pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                {...register("password", {
+                  required: {
+                    value: true,
+                    message: "Password is required.",
+                  },
+                })}
               />
-              <span className="text-red-500 text-xs">
-                {formData.passwordError}
-              </span>
+              {errors.password && (
+                <span className="text-red-500 text-xs block mt-1 font-medium">
+                  {errors.password.message}
+                </span>
+              )}
             </div>
 
             <button

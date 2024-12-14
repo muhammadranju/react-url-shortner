@@ -19,11 +19,15 @@ const userSchema = new mongoose.Schema(
     },
     locationInfo: { type: Object },
 
-    providerData: mongoose.Schema.Types.Mixed,
-
-    dateTime: {
+    password: {
       type: String,
     },
+
+    accountType: {
+      type: String,
+      default: "EMAIL_PASSWORD",
+    },
+
     googleId: {
       type: String,
     },

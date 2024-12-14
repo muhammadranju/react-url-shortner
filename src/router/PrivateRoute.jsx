@@ -3,11 +3,13 @@ import { useContext } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { RotatingLines } from "react-loader-spinner";
 import { AuthContext } from "../context/AuthProvider";
+
 const PrivateRoutes = ({ children }) => {
-  const { user, loading } = useContext(AuthContext);
+  const { user, loading, isLoggedIn } = useContext(AuthContext);
   const location = useLocation();
 
-  if (loading)
+  // If still loading, show spinner
+  if (loading) {
     return (
       <div className="flex justify-center items-center mt-72">
         <RotatingLines
@@ -18,17 +20,18 @@ const PrivateRoutes = ({ children }) => {
           strokeWidth="5"
           animationDuration="0.75"
           ariaLabel="rotating-lines-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
         />
       </div>
     );
-
-  if (!user) {
-    return <Navigate state={location.pathname} to="/login" replace={true} />;
   }
 
-  return <div>{children}</div>;
+  // If not logged in, redirect to login
+  if (!isLoggedIn || !user) {
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  }
+
+  // Render children if authenticated
+  return <>{children}</>;
 };
 
 export default PrivateRoutes;
