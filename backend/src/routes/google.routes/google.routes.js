@@ -35,7 +35,6 @@ router.get(
   }),
   (req, res) => {
     // Debug req.user to ensure it has the necessary fields
-    console.log(req.user);
 
     // Validate user data before generating the token
     if (!req.user || !req.user.id || !req.user.email) {
@@ -55,7 +54,6 @@ router.get(
 
 router.get("/verify", authMiddleware, (req, res) => {
   try {
-    console.log(req.user);
     return res
       .status(200)
       .json({ message: "Successfully verified!", user: req.user });

@@ -21,6 +21,7 @@ const AuthProvider = ({ children }) => {
     Cookies.remove("__myapp_isLoggedIn");
     Cookies.remove("__myapp_user_updated");
     Cookies.remove("__myapp_token");
+    Cookies.remove("__myapp_user_profile_updated");
   };
 
   useEffect(() => {

@@ -7,13 +7,17 @@ import Banner from "../../components/Banner/Banner";
 import Heading from "../../components/Heading/Heading";
 import ManageLinks from "../../components/ManageLinks/ManageLinks";
 import { AuthContext } from "../../context/AuthProvider";
-
+import Cookies from "js-cookie";
 const Home = () => {
-  const { refetch, setRefetch } = useContext(AuthContext);
+  const { setRefetch } = useContext(AuthContext);
+  const isCookeUpdated = Cookies.get("__myapp_user_profile_updated");
 
   useEffect(() => {
-    setRefetch(Date.now());
-  }, [refetch, setRefetch]);
+    if (isCookeUpdated === "true") {
+      Cookies.set("__myapp_user_profile_updated", false);
+      setRefetch(Date.now());
+    }
+  }, [setRefetch]);
   return (
     <section className="mt-10">
       <Banner></Banner>

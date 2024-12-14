@@ -48,6 +48,7 @@ const Login = () => {
       Cookies.set("__myapp_user_updated", false);
       Cookies.set("__myapp_token", result.userData.token);
       Cookies.set("__myapp_isLoggedIn", true);
+      Cookies.set("__myapp_user_profile_updated", true);
 
       navigate("/");
     }
