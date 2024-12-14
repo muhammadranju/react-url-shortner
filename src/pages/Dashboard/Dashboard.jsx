@@ -8,12 +8,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     const userInfoUpdate = async () => {
-      const res = await fetch(`http://localhost:3000/v1/api/users/${user.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_BackendUrl}/v1/api/users/${user.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const userInfo = await res.json();
       console.log(userInfo);
     };
