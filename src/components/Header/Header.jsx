@@ -98,9 +98,10 @@ const Header = () => {
               <Link
                 to={"/"}
                 onClick={signOutUser}
-                className="btn  rounded-full  border border-gray-500 text-white font-bold hover:bg-gray-600"
+                className="btn rounded-full  border border-gray-500 text-white font-bold hover:bg-gray-600"
               >
-                Log Out
+                <span className="lg:hidden">Log</span>
+                <span className="hidden lg:block">Log Out</span>
                 <CiLogin className="text-xl" />
               </Link>
             </>
@@ -128,7 +129,7 @@ const Header = () => {
         </div>
 
         {/* Theme Switcher */}
-        <div className="z-50">
+        <div className="z-50 px-1">
           <ThemeSwitcher />
         </div>
       </div>
