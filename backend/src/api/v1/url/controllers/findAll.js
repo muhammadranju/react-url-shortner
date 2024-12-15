@@ -1,17 +1,24 @@
 const ShortUrl = require("../../../../models/url.model/url.model");
+
 const findAll = async (req, res) => {
   try {
-    const shortUrls = await ShortUrl.find();
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
 
-    let totalHits = 0;
-    for (let i = 0; i < shortUrls.length; i++) {
-      const shortUrl = shortUrls[i];
-      totalHits += shortUrl.totalHits;
-    }
+    const skip = (page - 1) * limit;
+
+    const shortUrls = await ShortUrl.find()
+      .sort({ _id: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const totalCount = await ShortUrl.countDocuments();
+
     res.status(200).json({
       message: "All short URLs retrieved successfully",
       count: shortUrls.length,
-      totalHits,
+      totalPages: Math.ceil(totalCount / limit),
+      currentPage: page,
       data: shortUrls,
     });
   } catch (error) {

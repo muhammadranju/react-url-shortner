@@ -12,9 +12,18 @@ const urlSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    shotLink: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     clicks: {
       type: Number,
       default: 0,
+    },
+    icon: {
+      type: String,
+      required: true,
     },
 
     user: {
