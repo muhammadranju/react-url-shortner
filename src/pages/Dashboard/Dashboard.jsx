@@ -1,20 +1,56 @@
+/* eslint-disable no-unused-vars */
 import { IoIosLink } from "react-icons/io";
 import Table from "../../components/Table/Table";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
 import { RotatingLines } from "react-loader-spinner";
+import toast from "react-hot-toast";
+import swal from "sweetalert";
 
 const Dashboard = () => {
   const { user, loading } = useContext(AuthContext);
-  // const [isCookeUpdated, setIsCookeUpdated] = useState(false);
+
+  // State Management
+  const [urls, setUrls] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const urlRef = useRef(null);
   const isCookeUpdated = Cookies.get("__myapp_user_updated");
+  const token = Cookies.get("__myapp_token");
+  const limit = 10; // Fixed number of items per page
+
+  // Fetch URLs with Pagination
+  const fetchUrls = async (page = 1) => {
+    setIsLoading(true);
+    try {
+      const res = await fetch(
+        `${
+          import.meta.env.VITE_BackendUrl
+        }/v1/api/short-urls?page=${page}&limit=${limit}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: token,
+          },
+        }
+      );
+      const data = await res.json();
+      setUrls(data.data);
+      setCurrentPage(data.currentPage);
+      setTotalPages(data.totalPages);
+    } catch (error) {
+      toast.error("Failed to fetch URLs.");
+    }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     const userInfoUpdate = async () => {
       if (!isCookeUpdated) {
-        const res = await fetch(
+        await fetch(
           `${import.meta.env.VITE_BackendUrl}/v1/api/users/${user.id}`,
           {
             method: "PUT",
@@ -23,35 +59,71 @@ const Dashboard = () => {
             },
           }
         );
-        await res.json();
-        // setIsCookeUpdated(true);
         Cookies.set("__myapp_user_updated", true);
       }
+      await fetchUrls();
     };
 
     userInfoUpdate();
   }, [user.id, isCookeUpdated]);
 
   const handelURLSubmit = async () => {
-    const res = await fetch(
-      `${import.meta.env.VITE_BackendUrl}/v1/api/short-urls`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: Cookies.get("__myapp_token"),
-        },
-        body: JSON.stringify({
-          originalUrl: urlRef.current.value,
-        }),
+    setIsLoading(true);
+    const icon = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${urlRef.current.value}/&size=64`;
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BackendUrl}/v1/api/short-urls`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: Cookies.get("__myapp_token"),
+          },
+          body: JSON.stringify({
+            originalUrl: urlRef.current.value,
+            icon: icon,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success("URL created successfully");
+        setUrls([data.links, ...urls]);
+        urlRef.current.value = "";
+        fetchUrls(1); // Refresh URLs and go to the first page
+      } else {
+        toast.error(data.message);
+        if (data.message === "You can't shorten the same URL again") {
+          swal(
+            data.message,
+            `Here is your old Link: ${data?.existingLink?.url}`
+          );
+        }
       }
-    );
-    const data = await res.json();
-    console.log(data);
-    console.log(urlRef.current.value);
+    } catch (error) {
+      console.log(error);
+      // toast.error("Failed to shorten URL.");
+    }
+
+    setIsLoading(false);
   };
 
-  if (loading) {
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      fetchUrls(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      fetchUrls(currentPage - 1);
+    }
+  };
+
+  if (loading || isLoading) {
     return (
       <div className="flex justify-center items-center mt-72">
         <RotatingLines
@@ -96,28 +168,43 @@ const Dashboard = () => {
 
             <button
               onClick={handelURLSubmit}
-              className="absolute right-0 top-0 bottom-0 m-1 px-4 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600"
+              disabled={isLoading}
+              className={`absolute right-0 flex justify-center items-center top-0 bottom-0 m-1 px-4 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600  ${
+                isLoading ? " bg-gray-300 hover:bg-gray-300 text-black" : ""
+              }`}
             >
-              Shorten Now!
+              {isLoading ? "Shortening..." : "Shorten Now!"}
             </button>
           </label>
         </div>
-
-        <p className="text-center text-sm mt-5">
-          You can create <span className="font-bold text-pink-500">05</span>{" "}
-          more links. Register Now to enjoy Unlimited usage
-        </p>
       </div>
 
-      <Table />
+      <Table urls={urls} />
 
+      {/* Pagination Controls */}
       <div className="flex justify-center mt-10 gap-x-3">
-        <button className=" btn bg-blue-500 text-white font-bold hover:bg-blue-600">
-          Prev-
+        <button
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+          className={`btn bg-blue-500 text-white font-bold hover:bg-blue-600 ${
+            currentPage === 1 && "opacity-50 cursor-not-allowed"
+          }`}
+        >
+          Prev
         </button>
 
-        <button className="btn bg-blue-500 text-white font-bold hover:bg-blue-600">
-          Next+
+        <span className="flex items-center font-bold">
+          Page {currentPage} of {totalPages}
+        </span>
+
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={`btn bg-blue-500 text-white font-bold hover:bg-blue-600 ${
+            currentPage === totalPages && "opacity-50 cursor-not-allowed"
+          }`}
+        >
+          Next
         </button>
       </div>
     </section>

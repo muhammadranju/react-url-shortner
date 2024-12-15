@@ -10,6 +10,14 @@ const Footer = () => {
             className="text-blue-500 hover:underline ml-1 font-bold"
           >
             Md. Ranju
+          </a>{" "}
+          &
+          <a
+            href="https://github.com/MukitHossen7"
+            target="_blank"
+            className="text-blue-500 hover:underline ml-1 font-bold"
+          >
+            Mukit Hossen
           </a>
         </p>
       </aside>

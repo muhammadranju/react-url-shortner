@@ -10,7 +10,7 @@ import { useTheme } from "../../context/ThemeProvider";
 const ThemeSwitcher = () => {
   const { setTheme } = useTheme();
   return (
-    <Dropdown placement="bottom-start">
+    <Dropdown placement="bottom-start" className="z-50 bg-green-200">
       <DropdownAction asChild>
         <button className="rounded-lg bg-primary-25 p-2.5 dark:bg-white">
           <MoonStars size={20} color="#1C222B" className="hidden dark:block" />
