@@ -10,7 +10,19 @@ const findOne = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    // Check if email and password are provided
+    if (!email || !password) {
+      return res.status(400).json({
+        status: 400,
+        success: false,
+        message: "Email and password are required",
+      });
+    }
+
+    console.log("Request body:", req.body);
+
+    // Find user and explicitly include the password field
+    const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
       return res.status(401).json({
@@ -20,6 +32,9 @@ const findOne = async (req, res) => {
       });
     }
 
+    console.log("User found:", user);
+
+    // Compare provided password with hashed password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -48,13 +63,12 @@ const findOne = async (req, res) => {
       deviceInfo: user.deviceInfo,
       token: accessToken,
     };
+
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
     });
-
-    console.log(req.cookies);
 
     res.status(200).json({
       status: 200,
@@ -63,7 +77,12 @@ const findOne = async (req, res) => {
       userData,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error in findOne:", error);
+    res.status(500).json({
+      status: 500,
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
