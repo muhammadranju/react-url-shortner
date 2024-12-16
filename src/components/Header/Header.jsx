@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher";
+import { Button } from "@headlessui/react";
 
 const Header = () => {
   const { user, signOutUser } = useContext(AuthContext);
@@ -65,7 +66,7 @@ const Header = () => {
           {/* Brand Name */}
           <Link
             to={"/"}
-            className="text-2xl lg:text-3xl font-black bg-gradient-to-r from-pink-500 to-indigo-500 bg-clip-text text-transparent"
+            className="text-xl lg:text-3xl font-black bg-gradient-to-r from-pink-500 to-indigo-500 bg-clip-text text-transparent"
           >
             LinkiyShort
           </Link>
@@ -89,39 +90,35 @@ const Header = () => {
                       user?.photoURL ||
                       "https://www.gravatar.com/avatar/2f0b64d14b2d2bf2c0b6e3d1b47d3a94?s=200&d=mp"
                     }
-                    className="w-9 h-9 rounded-full"
+                    className="lg:w-9 lg:h-9 w-9 rounded-full"
                     alt="Profile"
                   />
                 </div>
               </Link>
 
-              <Link
-                to={"/"}
-                onClick={signOutUser}
-                className="btn rounded-full  border border-gray-500 text-white font-bold hover:bg-gray-600"
-              >
-                <span className="lg:hidden">Log</span>
-                <span className="hidden lg:block">Log Out</span>
-                <CiLogin className="text-xl" />
+              <Link to={"/"} onClick={signOutUser}>
+                <Button className="inline-flex  items-center gap-2 rounded-full bg-gray-700 py-2.5 lg:px-5 lg:pr-5 px-3 pr-4 text-sm/5 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
+                  {/* <span className="lg:hidden">Log</span> */}
+                  <span className="hidden lg:block">Log Out</span>
+                  <CiLogin className="text-2xl" />
+                </Button>
               </Link>
             </>
           ) : (
             <>
               {/* Login Button */}
-              <Link
-                to={"/login"}
-                className="btn rounded-full border border-gray-500 text-white font-bold hover:bg-gray-600"
-              >
-                Login
-                <CiLogin className="text-xl" />
+              <Link to={"/login"}>
+                <Button className="inline-flex  items-center gap-2 rounded-full bg-gray-700 py-2.5 px-4 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
+                  Login
+                  <CiLogin className="text-xl" />
+                </Button>
               </Link>
               {/* Register Button */}
               <div className="hidden lg:flex">
-                <Link
-                  to={"/register"}
-                  className="btn rounded-full bg-blue-500 text-white font-bold hover:bg-blue-600"
-                >
-                  Register Now
+                <Link to={"/register"}>
+                  <Button className="inline-flex  items-center gap-2 rounded-full bg-blue-700 py-2.5 px-4 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-blue-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
+                    Register Now
+                  </Button>
                 </Link>
               </div>
             </>

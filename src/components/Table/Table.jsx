@@ -3,14 +3,19 @@ import { IoIosLink } from "react-icons/io";
 import TRComponent from "./TR";
 import { FaLinkSlash } from "react-icons/fa6";
 import { FaCopy } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 const Table = ({ urls }) => {
+  const handleCopyToClipboard = (url) => {
+    navigator.clipboard.writeText(url.shortUrl);
+    toast.success("Copied!");
+  };
   return (
     <>
       {/* Table View for Large Screens */}
       <div className="relative overflow-x-auto mt-10 rounded-lg hidden lg:block">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs py-5 text-gray-700 bg-gray-50 dark:bg-gray-800 dark:text-gray-400">
+          <thead className="text-xs py-5 text-gray-700 bg-gray-50 dark:bg-gray-800/60 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
                 Short Link
@@ -27,9 +32,12 @@ const Table = ({ urls }) => {
               <th scope="col" className="px-6 py-3">
                 Date - Time
               </th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
             </tr>
           </thead>
-          <tbody className="py-2">
+          <tbody className="py-2 ">
             {urls?.map((url) => (
               <TRComponent key={url._id} url={url} />
             ))}
@@ -42,13 +50,16 @@ const Table = ({ urls }) => {
         {urls?.map((url) => (
           <div
             key={url._id}
-            className="bg-gray-800 text-white rounded-lg shadow-md p-4 mb-4"
+            className="bg-gray-800/30 border border-gray-50/30 text-white rounded-lg shadow-md p-4 mb-4"
           >
             <div className="mb-2">
               <span className="font-bold">Short Link: </span>
               <div className="flex items-center gap-x-2">
                 <span className="text-blue-400 break-all">{url.shortUrl}</span>
-                <button className="text-gray-300 p-2 bg-gray-700 rounded-full">
+                <button
+                  onClick={() => handleCopyToClipboard(url)}
+                  className="text-gray-300 p-2 bg-gray-700 rounded-full"
+                >
                   <FaCopy className="text-lg" />
                 </button>
               </div>
@@ -86,6 +97,14 @@ const Table = ({ urls }) => {
             <div>
               <span className="font-bold">Date - Time: </span>
               <span>{url.dateTime}</span>
+            </div>
+            <div>
+              <span className="font-bold">Action: </span>
+              <a href={url.shortUrl} target="_blank" rel="noopener noreferrer">
+                <button className="text-gray-300 p-2 btn btn-sm bg-gray-700 rounded-full">
+                  Open Link
+                </button>
+              </a>
             </div>
           </div>
         ))}

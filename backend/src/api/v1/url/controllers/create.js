@@ -10,6 +10,7 @@ const create = async (req, res) => {
 
     let { originalUrl, icon } = req.body;
 
+    console.log(req.user);
     if (!originalUrl) {
       return res.status(400).json({
         status: 400,
@@ -35,15 +36,36 @@ const create = async (req, res) => {
       "DD-MM-YYYY, HH:mm:ss"
     );
 
-    const existingURL = await ShortURL.findOne({ originalUrl });
+    const existingURL = await ShortURL.find({ originalUrl });
 
-    if (existingURL) {
+    // console.log(existingURL.user.toString() === req.user.id);
+    // console.log(req.user.id);
+    // console.log(existingURL);
+
+    // if (existingURL && existingURL.user.toString() === req.user.id) {
+    //   return res.status(400).json({
+    //     status: 400,
+    //     success: false,
+    //     message: "You can't shorten the same URL again",
+    //     existingLink: {
+    //       url: existingURL.shortUrl,
+    //       success: true,
+    //     },
+    //   });
+    // }
+
+    const isOwnedByUser = existingURL.some(
+      (url) => url.user.toString() === req.user.id
+    );
+
+    if (isOwnedByUser) {
       return res.status(400).json({
         status: 400,
         success: false,
         message: "You can't shorten the same URL again",
         existingLink: {
-          url: existingURL.shortUrl,
+          url: existingURL.find((url) => url.user.toString() === req.user.id)
+            .shortUrl,
           success: true,
         },
       });
@@ -62,7 +84,7 @@ const create = async (req, res) => {
     });
     await links.save();
 
-    console.log(links);
+    // console.log(links);
 
     return res.status(201).json({
       status: 201,

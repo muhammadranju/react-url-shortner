@@ -33,7 +33,6 @@ const authMiddleware = async (req, res, next) => {
     const user = await User.findById(decoded.id).select(
       "id email name photoURL refreshToken"
     );
-    console.log(user);
     if (!user) {
       return res.status(401).json({ message: "User not found. Unauthorized!" });
     }

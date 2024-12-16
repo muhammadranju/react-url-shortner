@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import swal from "sweetalert";
 
 const Dashboard = () => {
-  const { user, loading } = useContext(AuthContext);
+  const { user, loading, verifyUser } = useContext(AuthContext);
 
   // State Management
   const [urls, setUrls] = useState([]);
@@ -68,7 +68,7 @@ const Dashboard = () => {
   }, [user.id, isCookeUpdated]);
 
   const handelURLSubmit = async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
     const icon = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${urlRef.current.value}/&size=64`;
 
     try {
@@ -86,21 +86,21 @@ const Dashboard = () => {
           }),
         }
       );
+      await verifyUser();
 
       const data = await res.json();
 
       if (res.ok) {
-        toast.success("URL created successfully");
         setUrls([data.links, ...urls]);
         urlRef.current.value = "";
         fetchUrls(1); // Refresh URLs and go to the first page
+        swal("URL created successfully", { icon: "success" });
       } else {
         toast.error(data.message);
         if (data.message === "You can't shorten the same URL again") {
-          swal(
-            data.message,
-            `Here is your old Link: ${data?.existingLink?.url}`
-          );
+          swal(data.message, `Old Link: ${data?.existingLink?.url}`, {
+            icon: "warning",
+          });
         }
       }
     } catch (error) {
@@ -144,6 +144,9 @@ const Dashboard = () => {
   return (
     <section className="mt-10">
       <div className="flex flex-col items-center gap-y-3 justify-center">
+        <h3 className="lg:hidden flex justify-center items-center text-center  ">
+          Welcome🙂 <span className="font-semibold">{user.displayName} </span>
+        </h3>
         <h1 className="lg:text-5xl text-3xl font-bold text-center bg-gradient-to-r from-indigo-500 via-red-500 to-indigo-500 bg-clip-text text-transparent">
           Shorten Your Loooong Links :)
         </h1>
@@ -163,7 +166,7 @@ const Dashboard = () => {
               ref={urlRef}
               name="url"
               placeholder="Enter the link here"
-              className="w-full pl-10 pr-28 py-3 rounded-full bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-28 py-3 rounded-full bg-gray-800/20 text-white border border-gray-50/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <button

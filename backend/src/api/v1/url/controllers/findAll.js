@@ -6,8 +6,9 @@ const findAll = async (req, res) => {
     const limit = 10;
 
     const skip = (page - 1) * limit;
+    console.log(req.user);
 
-    const shortUrls = await ShortUrl.find()
+    const shortUrls = await ShortUrl.find({ user: req.user.id })
       .sort({ _id: -1 })
       .skip(skip)
       .limit(limit);
