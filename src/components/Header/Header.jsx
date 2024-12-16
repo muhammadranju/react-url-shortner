@@ -126,9 +126,6 @@ const Header = () => {
         </div>
 
         {/* Theme Switcher */}
-        <div className="z-50 px-1">
-          <ThemeSwitcher />
-        </div>
       </div>
     </header>
   );
