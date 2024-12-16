@@ -10,7 +10,10 @@ const TRComponent = ({ url }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopyToClipboard = () => {
-    navigator.clipboard.writeText(url.shortUrl);
+    navigator.clipboard.writeText(
+      `${import.meta.env.VITE_BackendUrl}/url/${url.shotLink}`
+    );
+
     setIsCopied(true);
     toast.success("Copied!");
     setTimeout(() => {
