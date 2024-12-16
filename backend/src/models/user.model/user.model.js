@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema(
       default: "EMAIL_PASSWORD",
     },
 
+    refreshToken: {
+      type: String,
+      default: null,
+    },
+
     googleId: {
       type: String,
     },
