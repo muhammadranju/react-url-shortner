@@ -29,7 +29,9 @@ const refreshAccessToken = async () => {
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_BackendUrl}/refresh`,
-      {},
+      {
+        refreshToken: Cookies.get("__myapp_refreshToken"),
+      },
       { withCredentials: true } // Refresh token sent via httpOnly cookie
     );
     const { accessToken } = response.data;
@@ -51,11 +53,6 @@ const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [refetch, setRefetch] = useState();
 
-  console.log(user);
-  const updateUser = (user) => {
-    setUser(user);
-  };
-
   const signOutUser = () => {
     setUser(null);
     setLoading(false);
@@ -63,13 +60,15 @@ const AuthProvider = ({ children }) => {
     Cookies.remove("__myapp_isLoggedIn");
     Cookies.remove("__myapp_user_updated");
     Cookies.remove("__myapp_token");
+    Cookies.remove("__myapp_refreshToken");
     Cookies.remove("__myapp_user_profile_updated");
   };
 
   const verifyUser = async () => {
     const token = Cookies.get("__myapp_token");
+    const refreshToken = Cookies.get("__myapp_refreshToken");
 
-    if (!token) {
+    if (!token && !refreshToken) {
       signOutUser();
       return;
     }
@@ -101,64 +100,6 @@ const AuthProvider = ({ children }) => {
       }
     }
   };
-  // const refreshAccessToken = async () => {
-  //   try {
-  //     const response = await axios.post(
-  //       "http://localhost:5000/refresh",
-  //       {},
-  //       { withCredentials: true }
-  //     );
-  //     console.log(response);
-  //     // Cookies.set("__myapp_token", result.userData.token);
-  //   } catch (err) {
-  //     console.error("Token refresh failed:", err);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const verifyUser = async () => {
-  //     try {
-  //       const token = Cookies.get("__myapp_token");
-  //       const isLoggedIn = Cookies.get("__myapp_isLoggedIn");
-  //       setLoading(true);
-
-  //       if (token && isLoggedIn) {
-  //         const res = await fetch(`${import.meta.env.VITE_BackendUrl}/verify`, {
-  //           method: "GET",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             authorization: token,
-  //           },
-  //         });
-
-  //         const data = await res.json();
-  //         if (res.ok) {
-  //           setUser(data.user);
-  //           setIsLoggedIn(true);
-  //         } else {
-  //           setUser(null);
-  //           setIsLoggedIn(false);
-  //           Cookies.remove("__myapp_token");
-  //           Cookies.remove("__myapp_isLoggedIn");
-  //         }
-  //       } else {
-  //         setUser(null);
-  //         setIsLoggedIn(false);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error verifying user:", error);
-  //       if (error.response?.status === 403) {
-  //         // If the access token is expired, refresh it
-  //         await refreshAccessToken();
-  //       } else {
-  //         console.log("Access denied");
-  //       }
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   verifyUser();
-  // }, [refetch]);
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -168,14 +109,13 @@ const AuthProvider = ({ children }) => {
     };
 
     initializeAuth();
-  }, []);
+  }, [refetch]);
 
   const values = {
     user,
     setUser,
     loading,
     setLoading,
-    updateUser,
     signOutUser,
     isLoggedIn,
     setIsLoggedIn,

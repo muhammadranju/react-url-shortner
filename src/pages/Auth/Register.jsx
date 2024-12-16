@@ -23,9 +23,14 @@ const RegistrationLoginPage = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const token = searchParams.get("token");
+    const refreshToken = searchParams.get("refreshToken");
 
     if (token) {
       Cookies.set("__myapp_token", token, { expires: 30, secure: true }); // Expires in 30 day, secure flag for HTTPS
+      Cookies.set("__myapp_refreshToken", refreshToken, {
+        expires: 30,
+        secure: true,
+      }); // Expires in 30 day, secure flag for HTTPS
       Cookies.set("__myapp_isLoggedIn", true);
       Cookies.set("__myapp_user_updated", false);
 

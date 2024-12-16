@@ -42,12 +42,13 @@ const Login = () => {
 
     const result = await response.json();
 
-    console.log(result.userData.token);
+    console.log(result);
 
     if (result.success) {
       toast.success("User login Successfully!");
       Cookies.set("__myapp_user_updated", false);
       Cookies.set("__myapp_token", result.userData.token);
+      Cookies.set("__myapp_refreshToken", result.userData.refreshToken);
       Cookies.set("__myapp_isLoggedIn", true);
       Cookies.set("__myapp_user_profile_updated", true);
 

@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { RotatingLines } from "react-loader-spinner";
 import toast from "react-hot-toast";
 import swal from "sweetalert";
+import { useForm } from "react-hook-form";
 
 const Dashboard = () => {
   const { user, loading, verifyUser } = useContext(AuthContext);
@@ -16,14 +17,21 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const urlRef = useRef(null);
   const isCookeUpdated = Cookies.get("__myapp_user_updated");
   const token = Cookies.get("__myapp_token");
   const limit = 10; // Fixed number of items per page
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   // Fetch URLs with Pagination
   const fetchUrls = async (page = 1) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     try {
       const res = await fetch(
         `${
@@ -67,9 +75,11 @@ const Dashboard = () => {
     userInfoUpdate();
   }, [user.id, isCookeUpdated]);
 
-  const handelURLSubmit = async () => {
-    // setIsLoading(true);
-    const icon = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${urlRef.current.value}/&size=64`;
+  console.log(errors);
+
+  const handelURLSubmit = async (dataUrl) => {
+    setIsSubmitting(true);
+    const icon = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${dataUrl.url}/&size=64`;
 
     try {
       const res = await fetch(
@@ -81,7 +91,7 @@ const Dashboard = () => {
             authorization: Cookies.get("__myapp_token"),
           },
           body: JSON.stringify({
-            originalUrl: urlRef.current.value,
+            originalUrl: dataUrl.url,
             icon: icon,
           }),
         }
@@ -92,9 +102,9 @@ const Dashboard = () => {
 
       if (res.ok) {
         setUrls([data.links, ...urls]);
-        urlRef.current.value = "";
-        fetchUrls(1); // Refresh URLs and go to the first page
         swal("URL created successfully", { icon: "success" });
+        dataUrl.url = "";
+        fetchUrls(1); // Refresh URLs and go to the first page
       } else {
         toast.error(data.message);
         if (data.message === "You can't shorten the same URL again") {
@@ -108,7 +118,7 @@ const Dashboard = () => {
       // toast.error("Failed to shorten URL.");
     }
 
-    setIsLoading(false);
+    setIsSubmitting(false);
   };
 
   const handleNextPage = () => {
@@ -160,25 +170,49 @@ const Dashboard = () => {
             <div className="absolute left-3 text-xl text-gray-500">
               <IoIosLink />
             </div>
-
             <input
               type="text"
               ref={urlRef}
               name="url"
               placeholder="Enter the link here"
               className="w-full pl-10 pr-28 py-3 rounded-full bg-gray-800/20 text-white border border-gray-50/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              {...register("url", {
+                required: {
+                  value: true,
+                  message: "URL field is required.",
+                },
+                pattern: {
+                  value:
+                    /^(https?:\/\/)?((([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})|localhost)(:[0-9]{1,5})?(\/[^\s]*)?$/,
+                  message: "Please enter a valid URL.",
+                },
+              })}
             />
 
             <button
-              onClick={handelURLSubmit}
-              disabled={isLoading}
-              className={`absolute right-0 flex justify-center items-center top-0 bottom-0 m-1 px-4 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600  ${
-                isLoading ? " bg-gray-300 hover:bg-gray-300 text-black" : ""
+              onClick={handleSubmit(handelURLSubmit)}
+              disabled={isSubmitting}
+              className={`absolute right-0 flex justify-center items-center top-0 bottom-0 m-1 px-4 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600  
+              ${isSubmitting && "opacity-50 cursor-not-allowed"}
               }`}
             >
-              {isLoading ? "Shortening..." : "Shorten Now!"}
+              {isSubmitting ? (
+                <>
+                  Shortening{" "}
+                  <span className="loading loading-spinner loading-md"></span>
+                </>
+              ) : (
+                "Shorten Now!"
+              )}
             </button>
           </label>
+          <span className="text-center ">
+            {errors.url && (
+              <span className="text-red-500 text-sm font-bold block mt-2">
+                {errors.url.message}
+              </span>
+            )}
+          </span>
         </div>
       </div>
 

@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { Button } from "@headlessui/react";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { FaCopy } from "react-icons/fa";
@@ -44,7 +45,7 @@ const TRComponent = ({ url }) => {
       </td>
       <td className="px-6 py-4">{url.clicks}</td>
       <td className="px-6 py-4 flex">
-        {url.clicks > 100 ? (
+        {url.clicks > 1000 ? (
           <div className="text-yellow-500 text-xs flex items-center gap-x-2">
             <span className="bg-yellow-500/30 text-yellow-400 rounded-full p-2 text-xs">
               <FaLinkSlash className="text-lg" />
@@ -63,11 +64,14 @@ const TRComponent = ({ url }) => {
 
       <td className="px-6 py-4">{url.dateTime}</td>
       <td className="px-6 py-4">
-        {" "}
-        <a href={url.shortUrl} target="_blank" rel="noopener noreferrer">
-          <button className="text-gray-300 p-2 btn btn-sm bg-gray-700 rounded-full">
-            Open Link
-          </button>
+        <a
+          href={`${import.meta.env.VITE_BackendUrl}/url/${url.shotLink}`}
+          target="_blank"
+        >
+          <Button className="inline-flex  items-center gap-2 rounded-full bg-gray-700 py-2.5 lg:px-5 lg:pr-5 px-3 pr-4 text-xs/4 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
+            {/* <span className="lg:hidden">Log</span> */}
+            <span className="hidden lg:block">Open Link</span>
+          </Button>
         </a>
       </td>
     </tr>

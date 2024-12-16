@@ -11,7 +11,7 @@ const Router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    errorElement: <div>Error</div>,
+    errorElement: <h1>Error</h1>,
     children: [
       {
         index: true,
@@ -39,6 +39,14 @@ const Router = createBrowserRouter([
       {
         path: "register",
         element: <Register />,
+      },
+      {
+        path: "limit-over",
+        element: <h1>Limit Over</h1>,
+      },
+      {
+        path: "not-found",
+        element: <h1>URL Not Found</h1>,
       },
     ],
   },

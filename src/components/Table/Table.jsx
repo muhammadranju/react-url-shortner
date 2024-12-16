@@ -4,6 +4,7 @@ import TRComponent from "./TR";
 import { FaLinkSlash } from "react-icons/fa6";
 import { FaCopy } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { Button } from "@headlessui/react";
 
 const Table = ({ urls }) => {
   const handleCopyToClipboard = (url) => {
@@ -98,12 +99,13 @@ const Table = ({ urls }) => {
               <span className="font-bold">Date - Time: </span>
               <span>{url.dateTime}</span>
             </div>
-            <div>
+            <div className="mt-2">
               <span className="font-bold">Action: </span>
               <a href={url.shortUrl} target="_blank" rel="noopener noreferrer">
-                <button className="text-gray-300 p-2 btn btn-sm bg-gray-700 rounded-full">
+                <Button className="inline-flex  items-center gap-2 rounded-full bg-gray-700 py-2.5 lg:px-5 lg:pr-5 px-3 pr-4 text-xs/4 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
+                  {/* <span className="lg:hidden">Log</span> */}
                   Open Link
-                </button>
+                </Button>
               </a>
             </div>
           </div>
