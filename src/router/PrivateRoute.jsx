@@ -1,12 +1,20 @@
 /* eslint-disable react/prop-types */
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { RotatingLines } from "react-loader-spinner";
 import { AuthContext } from "../context/AuthProvider";
 
 const PrivateRoutes = ({ children }) => {
-  const { user, loading, isLoggedIn } = useContext(AuthContext);
+  const { user, loading, isLoggedIn, verifyUser } = useContext(AuthContext);
   const location = useLocation();
+
+  const refreshAccessToken = async () => {
+    await verifyUser();
+  };
+
+  useEffect(() => {
+    refreshAccessToken();
+  }, []);
 
   // If still loading, show spinner
   if (loading) {

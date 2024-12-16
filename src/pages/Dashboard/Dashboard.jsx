@@ -49,18 +49,18 @@ const Dashboard = () => {
 
   useEffect(() => {
     const userInfoUpdate = async () => {
-      if (!isCookeUpdated) {
-        await fetch(
-          `${import.meta.env.VITE_BackendUrl}/v1/api/users/${user.id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        Cookies.set("__myapp_user_updated", true);
-      }
+      // if (!isCookeUpdated) {
+      await fetch(
+        `${import.meta.env.VITE_BackendUrl}/v1/api/users/${user.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      Cookies.set("__myapp_user_updated", true);
+      // }
       await fetchUrls();
     };
 

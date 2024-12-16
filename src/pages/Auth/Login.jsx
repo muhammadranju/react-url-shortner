@@ -32,6 +32,7 @@ const Login = () => {
           "Content-Type": "application/json",
           authorization: Cookies.get("__myapp_token"),
         },
+        credentials: "include",
         body: JSON.stringify({
           email: email,
           password: password,
