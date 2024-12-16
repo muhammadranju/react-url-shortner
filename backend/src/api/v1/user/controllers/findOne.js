@@ -1,7 +1,10 @@
-/* eslint-disable no-undef */
 const User = require("../../../../models/user.model/user.model");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+
+const {
+  generateAccessToken,
+  generateRefreshToken,
+} = require("../../../../utils/generateToken");
 
 const findOne = async (req, res) => {
   try {
@@ -27,20 +30,32 @@ const findOne = async (req, res) => {
       });
     }
 
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "30d" }
-    );
+    const accessToken = generateAccessToken({
+      id: user._id,
+      email: user.email,
+    });
+    const refreshToken = generateRefreshToken({
+      id: user._id,
+      email: user.email,
+    });
+
+    user.refreshToken = refreshToken;
+    await user.save();
 
     const userData = {
       name: user.name,
       email: user.email,
       deviceInfo: user.deviceInfo,
-      token,
+      token: accessToken,
     };
+    res.cookie("refresh_token", refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
 
-    console.log(userData);
+    console.log(req.cookies);
+
     res.status(200).json({
       status: 200,
       success: true,
