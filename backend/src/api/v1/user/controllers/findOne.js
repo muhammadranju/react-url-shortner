@@ -66,7 +66,7 @@ const findOne = async (req, res) => {
 
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: "lax",
     });
 
