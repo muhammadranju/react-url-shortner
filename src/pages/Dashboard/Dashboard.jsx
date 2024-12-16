@@ -135,24 +135,6 @@ const Dashboard = () => {
     }
   };
 
-  // if (loading || isLoading) {
-  //   return (
-  //     <div className="flex justify-center items-center mt-72">
-  //       <RotatingLines
-  //         visible={true}
-  //         height="96"
-  //         width="96"
-  //         strokeColor="#6366f1"
-  //         strokeWidth="5"
-  //         animationDuration="0.75"
-  //         ariaLabel="rotating-lines-loading"
-  //         wrapperStyle={{}}
-  //         wrapperClass=""
-  //       />
-  //     </div>
-  //   );
-  // }
-
   return (
     <section className="mt-10">
       <div className="flex flex-col items-center gap-y-3 justify-center">
