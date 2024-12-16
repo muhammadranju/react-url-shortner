@@ -37,13 +37,13 @@ const Header = () => {
               {/* Dropdown Content */}
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content mt-3 w-52 bg-base-100 rounded-box shadow-lg z-[1] p-2"
+                className="menu menu-sm dropdown-content mt-3 w-52 bg-gray-800 rounded-box shadow-lg z-[1] p-2 space-y-2"
               >
                 <>
                   <li>
                     <Link
                       to={"/login"}
-                      className="btn btn-sm rounded-full border border-gray-500 text-white font-bold hover:bg-gray-600"
+                      className="btn btn-sm rounded-full  bg-gray-700 border-gray-500 text-white font-bold hover:bg-gray-600"
                     >
                       Login
                       <CiLogin className="text-xl" />

@@ -11,6 +11,7 @@ const Table = ({ urls }) => {
     navigator.clipboard.writeText(url.shortUrl);
     toast.success("Copied!");
   };
+
   return (
     <>
       {/* Table View for Large Screens */}
@@ -45,9 +46,11 @@ const Table = ({ urls }) => {
           </tbody>
         </table>
       </div>
+      {/* {urls.length > 0 ? <Table urls={urls} /> : <TableSkeletonMobile />} */}
 
       {/* Card View for Mobile Devices */}
       <div className="lg:hidden mt-10">
+        {/* <TableSkeletonMobile /> */}
         {urls?.map((url) => (
           <div
             key={url._id}

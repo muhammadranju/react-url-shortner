@@ -8,6 +8,8 @@ import { RotatingLines } from "react-loader-spinner";
 import toast from "react-hot-toast";
 import swal from "sweetalert";
 import { useForm } from "react-hook-form";
+import TableSkeleton from "../../components/TableSkeleton/TableSkeleton";
+import TableSkeletonMobile from "../../components/TableSkeleton/TableSkeletonMobile";
 
 const Dashboard = () => {
   const { user, loading, verifyUser } = useContext(AuthContext);
@@ -31,7 +33,7 @@ const Dashboard = () => {
 
   // Fetch URLs with Pagination
   const fetchUrls = async (page = 1) => {
-    // setIsLoading(true);
+    setIsLoading(true);
     try {
       const res = await fetch(
         `${
@@ -133,23 +135,23 @@ const Dashboard = () => {
     }
   };
 
-  if (loading || isLoading) {
-    return (
-      <div className="flex justify-center items-center mt-72">
-        <RotatingLines
-          visible={true}
-          height="96"
-          width="96"
-          strokeColor="#6366f1"
-          strokeWidth="5"
-          animationDuration="0.75"
-          ariaLabel="rotating-lines-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-        />
-      </div>
-    );
-  }
+  // if (loading || isLoading) {
+  //   return (
+  //     <div className="flex justify-center items-center mt-72">
+  //       <RotatingLines
+  //         visible={true}
+  //         height="96"
+  //         width="96"
+  //         strokeColor="#6366f1"
+  //         strokeWidth="5"
+  //         animationDuration="0.75"
+  //         ariaLabel="rotating-lines-loading"
+  //         wrapperStyle={{}}
+  //         wrapperClass=""
+  //       />
+  //     </div>
+  //   );
+  // }
 
   return (
     <section className="mt-10">
@@ -215,9 +217,13 @@ const Dashboard = () => {
           </span>
         </div>
       </div>
+      {/* <TableSkeleton /> */}
+      {urls?.length > 0 ? <Table urls={urls} /> : <TableSkeleton />}
+      <div className="lg:hidden">
+        {urls?.length > 0 ? "" : <TableSkeletonMobile />}
+      </div>
 
-      <Table urls={urls} />
-
+      {/* <Table urls={urls} /> */}
       {/* Pagination Controls */}
       <div className="flex justify-center mt-10 gap-x-3">
         <button
