@@ -5,9 +5,7 @@ const authMiddleware = require("../../middleware/authMiddleware");
 
 router.route("/v1/api/short-urls").get(authMiddleware, urlController.findAll);
 router.route("/v1/api/short-urls").post(authMiddleware, urlController.create);
-router
-  .route("/v1/api/short-urls/:id")
-  .get(authMiddleware, urlController.findOne);
+router.route("/url/:shortLink").get(urlController.findOne);
 // router.route("/v1/api/short-urls/:id").patch(urlController.update);
 // router.route("/v1/api/short-urls/:id").delete(urlController.deleteShortUrl);
 

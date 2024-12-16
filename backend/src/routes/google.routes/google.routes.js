@@ -45,7 +45,9 @@ router.get(
     });
 
     // Redirect to frontend with the token
-    res.redirect(`${process.env.FRONTEND_URL}/register?token=${token}`);
+    res.redirect(
+      `${process.env.FRONTEND_URL}/register?token=${token}&refreshToken=${refreshToken}`
+    );
   }
 );
 
@@ -62,8 +64,10 @@ router.get("/verify", authMiddleware, (req, res) => {
 router.post("/refresh", async (req, res) => {
   try {
     // const accessToken = req.headers["authorization"];
-    const refreshToken = req.cookies.refresh_token;
-    console.log("refresh", req.cookies.refresh_token);
+    // const
+    const refreshToken = req.cookies.refresh_token || req.body.refreshToken;
+
+    console.log("refresh", refreshToken);
     if (!refreshToken) {
       return res.status(401).json({ message: "No refresh token provided" }); // Unauthorized
     }
