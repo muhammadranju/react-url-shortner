@@ -15,6 +15,8 @@ const findAll = async (req, res) => {
 
     const totalCount = await ShortUrl.countDocuments();
 
+    console.log(shortUrls.length);
+
     res.status(200).json({
       message: "All short URLs retrieved successfully",
       count: shortUrls.length,

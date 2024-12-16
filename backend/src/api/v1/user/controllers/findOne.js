@@ -62,6 +62,7 @@ const findOne = async (req, res) => {
       email: user.email,
       deviceInfo: user.deviceInfo,
       token: accessToken,
+      refreshToken,
     };
 
     res.cookie("refresh_token", refreshToken, {
