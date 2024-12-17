@@ -2,7 +2,7 @@ import { RiCheckboxCircleFill } from "react-icons/ri";
 import dashBoardImg from "../../assets/dashboard-dark.png";
 const ManageLinks = () => {
   return (
-    <div className="flex flex-col lg:flex-row gap-9 mt-16 lg:mt-28">
+    <div className="flex flex-col flex-col-reverse lg:flex-row gap-9 mt-16 lg:mt-28">
       <div className="w-full lg:w-1/2 text-center">
         <h3 className="font-bold text-2xl lg:text-3xl text-white/85 mb-5">
           Easily Manage Your Links

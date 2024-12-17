@@ -1,13 +1,11 @@
-// import { IoIosLink } from "react-icons/io";
-// import Table from "../../components/Table/Table";
-
 import { useContext, useEffect } from "react";
 import AdvancedAnalytics from "../../components/AdvancedAnalytics/AdvancedAnalytics";
-import Banner from "../../components/Banner/Banner";
+// import Banner from "../../components/Banner/Banner";
 import Heading from "../../components/Heading/Heading";
 import ManageLinks from "../../components/ManageLinks/ManageLinks";
 import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
+import HeroSection from "../../components/HeroSection/HeroSection";
 const Home = () => {
   const { setRefetch } = useContext(AuthContext);
   const isCookeUpdated = Cookies.get("__myapp_user_profile_updated");
@@ -19,8 +17,9 @@ const Home = () => {
     }
   }, [setRefetch]);
   return (
-    <section className="mt-10">
-      <Banner></Banner>
+    <section className="mt-10 mb-20">
+      <HeroSection />
+      {/* <Banner></Banner> */}
       <Heading></Heading>
       <ManageLinks></ManageLinks>
       <AdvancedAnalytics></AdvancedAnalytics>

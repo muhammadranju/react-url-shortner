@@ -28,7 +28,7 @@ const findOne = async (req, res) => {
       return res.status(401).json({
         status: 401,
         success: false,
-        message: "User not found",
+        message: "Invalid credentials Email/Password",
       });
     }
 
@@ -41,7 +41,7 @@ const findOne = async (req, res) => {
       return res.status(401).json({
         status: 401,
         success: false,
-        message: "Invalid credentials",
+        message: "Invalid credentials Email/Password",
       });
     }
 

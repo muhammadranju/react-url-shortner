@@ -1,12 +1,14 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Lock, Mail, Image } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
 import { useForm } from "react-hook-form";
+import { LuEye, LuEyeOff } from "react-icons/lu";
 
 const Login = () => {
+  const [eye, setEye] = useState(false);
   const {
     register,
     handleSubmit,
@@ -41,7 +43,9 @@ const Login = () => {
     );
 
     const result = await response.json();
-
+    if (result.status === 401) {
+      toast.error(result.message);
+    }
     console.log(result);
 
     if (result.success) {
@@ -54,8 +58,6 @@ const Login = () => {
 
       navigate("/");
     }
-
-    console.log(email, password);
   };
 
   const handleGoogleAuth = () => {
@@ -84,7 +86,7 @@ const Login = () => {
             </h1>
 
             <div className="relative">
-              <Mail className="absolute left-3 top-3 text-gray-400" />
+              <Mail className="absolute left-3 top-2 text-gray-400" />
               <input
                 type="email"
                 name="email"
@@ -109,9 +111,9 @@ const Login = () => {
             </div>
 
             <div className="relative">
-              <Lock className="absolute left-3 top-3 text-gray-400" />
+              <Lock className="absolute left-3 top-2 text-gray-400" />
               <input
-                type="password"
+                type={`${eye ? "text" : "password"}`}
                 name="password"
                 placeholder="Password"
                 className="w-full bg-gray-800 pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -122,6 +124,17 @@ const Login = () => {
                   },
                 })}
               />
+              <button
+                onClick={() => setEye(!eye)}
+                type="button"
+                className="absolute top-[6px] right-2 p-2 text-gray-500 hover:text-gray-700 focus:outline-none "
+              >
+                {eye ? (
+                  <LuEyeOff className="text-gray-400" />
+                ) : (
+                  <LuEye className="text-gray-400" />
+                )}
+              </button>
               {errors.password && (
                 <span className="text-red-500 text-xs block mt-1 font-medium">
                   {errors.password.message}

@@ -6,8 +6,10 @@ import toast from "react-hot-toast";
 import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
 import { useForm } from "react-hook-form";
+import { LuEye, LuEyeOff } from "react-icons/lu";
 
 const RegistrationLoginPage = () => {
+  const [eye, setEye] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isErrors, setErrors] = useState("");
   const navigate = useNavigate();
@@ -83,7 +85,7 @@ const RegistrationLoginPage = () => {
   };
 
   return (
-    <div className=" my-24  flex items-center justify-center p-4">
+    <div className=" my-24 flex items-center justify-center p-4">
       <div className="bg-gray-800 shadow-2xl rounded-2xl w-full max-w-4xl flex overflow-hidden">
         {/* Illustration Section */}
         <div className="md:block hidden w-1/2 bg-gradient-to-tr from-indigo-600  p-8 flex items-center justify-center">
@@ -97,7 +99,7 @@ const RegistrationLoginPage = () => {
         </div>
 
         {/* Form Section */}
-        <div className="w-full md:w-1/2 p-8">
+        <div className="w-full lg:w-1/2 p-8">
           <form onSubmit={handleSubmit(handlerRegister)} className="space-y-6">
             <h1 className="text-3xl font-bold text-center text-gray-800">
               Register
@@ -105,7 +107,7 @@ const RegistrationLoginPage = () => {
 
             <div className="space-y-4">
               <div className="relative">
-                <User className="absolute left-3 top-3 text-gray-400" />
+                <User className="absolute left-3 top-2 text-gray-400" />
                 <input
                   type="text"
                   name="fullName"
@@ -131,7 +133,7 @@ const RegistrationLoginPage = () => {
             </div>
 
             <div className="relative">
-              <Mail className="absolute left-3 top-3 text-gray-400" />
+              <Mail className="absolute left-3 top-2 text-gray-400" />
               <input
                 type="email"
                 name="email"
@@ -161,9 +163,9 @@ const RegistrationLoginPage = () => {
             </div>
 
             <div className="relative">
-              <Lock className="absolute left-3 top-3 text-gray-400" />
+              <Lock className="absolute left-3 top-2 text-gray-400" />
               <input
-                type="password"
+                type={`${eye ? "text" : "password"}`}
                 name="password"
                 placeholder="Password"
                 className="w-full bg-gray-800 pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -183,6 +185,17 @@ const RegistrationLoginPage = () => {
                   },
                 })}
               />
+              <button
+                onClick={() => setEye(!eye)}
+                type="button"
+                className="absolute top-[6px] right-2 p-2 text-gray-500 hover:text-gray-700 focus:outline-none "
+              >
+                {eye ? (
+                  <LuEyeOff className="text-gray-400" />
+                ) : (
+                  <LuEye className="text-gray-400" />
+                )}
+              </button>
               {errors.password && (
                 <span className="text-red-500 text-xs block mt-1 font-medium">
                   {errors.password.message}

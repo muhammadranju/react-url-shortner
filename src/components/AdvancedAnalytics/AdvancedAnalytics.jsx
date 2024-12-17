@@ -1,12 +1,12 @@
 import { RiCheckboxCircleFill } from "react-icons/ri";
-import analyticsImg from "../../assets/analytics-dark.png";
+import homepage_hero from "../../assets/homepage_hero_alpha.png";
 const AdvancedAnalytics = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-16 mt-16 lg:mt-28">
       <div className="w-full lg:w-1/2">
         <img
-          src={analyticsImg}
-          className="border border-white/20 rounded-lg"
+          src={homepage_hero}
+          className="border border-white/20 p-5 rounded-lg"
         ></img>
       </div>
       <div className="w-full lg:w-1/2 text-center flex flex-col justify-center">
