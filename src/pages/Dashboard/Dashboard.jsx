@@ -59,7 +59,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     const userInfoUpdate = async () => {
-      // if (!isCookeUpdated) {
       await fetch(
         `${import.meta.env.VITE_BackendUrl}/v1/api/users/${user.id}`,
         {
@@ -70,14 +69,11 @@ const Dashboard = () => {
         }
       );
       Cookies.set("__myapp_user_updated", true);
-      // }
-      await fetchUrls();
+      await fetchUrls(); // Initially fetch URLs
     };
 
     userInfoUpdate();
   }, [user.id, isCookeUpdated]);
-
-  console.log(errors);
 
   const handelURLSubmit = async (dataUrl) => {
     setIsSubmitting(true);
@@ -117,7 +113,6 @@ const Dashboard = () => {
       }
     } catch (error) {
       console.log(error);
-      // toast.error("Failed to shorten URL.");
     }
 
     setIsSubmitting(false);
@@ -172,13 +167,11 @@ const Dashboard = () => {
                 },
               })}
             />
-
             <button
               onClick={handleSubmit(handelURLSubmit)}
               disabled={isSubmitting}
               className={`absolute right-0 flex justify-center items-center top-0 bottom-0 m-1 px-4 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600  
-              ${isSubmitting && "opacity-50 cursor-not-allowed"}
-              }`}
+              ${isSubmitting && "opacity-50 cursor-not-allowed"}`}
             >
               {isSubmitting ? (
                 <>
@@ -199,13 +192,31 @@ const Dashboard = () => {
           </span>
         </div>
       </div>
-      {/* <TableSkeleton /> */}
-      {urls?.length > 0 ? <Table urls={urls} /> : <TableSkeleton />}
-      <div className="lg:hidden">
-        {urls?.length > 0 ? "" : <TableSkeletonMobile />}
-      </div>
 
-      {/* <Table urls={urls} /> */}
+      {/* Render Skeleton or Data */}
+      {/* {isLoading ? (
+        <>
+          <TableSkeleton />
+          <TableSkeletonMobile />
+        </>
+      ) : urls?.length > 0 ? (
+        <>
+          <Table urls={urls} />
+         
+        </>
+      ) : (
+        <div className="text-center font-bold text-white">No Data Found</div>
+      )} */}
+
+      {isLoading ? (
+        <>
+          <TableSkeleton />
+          <TableSkeletonMobile />
+        </>
+      ) : (
+        <Table urls={urls} />
+      )}
+
       {/* Pagination Controls */}
       <div className="flex justify-center mt-10 gap-x-3">
         <button

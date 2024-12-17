@@ -52,6 +52,7 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [refetch, setRefetch] = useState();
+  const localUserData = JSON.parse(localStorage.getItem("userData"));
 
   const signOutUser = () => {
     setUser(null);
@@ -62,6 +63,7 @@ const AuthProvider = ({ children }) => {
     Cookies.remove("__myapp_token");
     Cookies.remove("__myapp_refreshToken");
     Cookies.remove("__myapp_user_profile_updated");
+    localStorage.removeItem("userData");
   };
 
   const verifyUser = async () => {
@@ -76,7 +78,13 @@ const AuthProvider = ({ children }) => {
     try {
       // Verify access token
       const userData = await verifyAccessToken(token);
-      setUser(userData);
+
+      if (localUserData === null) {
+        localStorage.setItem("userData", JSON.stringify(userData));
+        // return await localforage.setItem("user", userData);
+      }
+
+      setUser(localUserData);
       setIsLoggedIn(true);
     } catch (error) {
       console.error(error.message);
@@ -88,6 +96,11 @@ const AuthProvider = ({ children }) => {
         if (newAccessToken) {
           // Retry verifying the user with the new access token
           const userData = await verifyAccessToken(newAccessToken);
+
+          if (localUserData === null) {
+            localStorage.setItem("userData", JSON.stringify(userData));
+          }
+
           setUser(userData);
           setIsLoggedIn(true);
         } else {

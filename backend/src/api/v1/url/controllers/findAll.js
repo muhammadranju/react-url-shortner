@@ -4,9 +4,7 @@ const findAll = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
-
     const skip = (page - 1) * limit;
-    console.log(req.user);
 
     const shortUrls = await ShortUrl.find({ user: req.user.id })
       .sort({ _id: -1 })
@@ -14,8 +12,6 @@ const findAll = async (req, res) => {
       .limit(limit);
 
     const totalCount = await ShortUrl.countDocuments();
-
-    console.log(shortUrls.length);
 
     res.status(200).json({
       message: "All short URLs retrieved successfully",

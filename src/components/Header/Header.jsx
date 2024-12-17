@@ -3,7 +3,6 @@ import { CiLogin } from "react-icons/ci";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { BsMenuButtonFill } from "react-icons/bs";
 import { FiLogOut } from "react-icons/fi";
-
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
@@ -11,13 +10,13 @@ import { Button } from "@headlessui/react";
 import { FaRegUser } from "react-icons/fa";
 
 const Header = () => {
-  const { user, signOutUser } = useContext(AuthContext);
+  const { signOutUser } = useContext(AuthContext);
   const cookie = Cookies.get("__myapp_isLoggedIn");
+  const localUserData = JSON.parse(localStorage.getItem("userData"));
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -108,7 +107,7 @@ const Header = () => {
                   <div className="bg-white/90 p-[2px] rounded-full">
                     <img
                       src={
-                        user?.photoURL ||
+                        localUserData?.photoURL ||
                         "https://www.gravatar.com/avatar/2f0b64d14b2d2bf2c0b6e3d1b47d3a94?s=200&d=mp"
                       }
                       className="lg:w-8 w-9 rounded-full"
@@ -117,7 +116,7 @@ const Header = () => {
                   </div>
                   <div className="hidden sm:block flex flex-col">
                     <span className="text-white font-semibold text-sm block -mb-1">
-                      {user?.displayName || "User Name"}
+                      {localUserData?.displayName || "User Name"}
                     </span>
                     <small className="text-gray-400">Personal</small>
                   </div>
@@ -170,14 +169,6 @@ const Header = () => {
                   </div>
                 )}
               </div>
-
-              {/* Logout Button */}
-              {/* <Link to={"/"} onClick={signOutUser}>
-                <Button className="inline-flex items-center gap-2 rounded-full bg-gray-700 py-2.5 lg:px-5 px-3 text-sm/5 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-gray-600">
-                  <span className="hidden lg:block">Log Out</span>
-                  <CiLogin className="text-2xl" />
-                </Button>
-              </Link> */}
             </>
           ) : (
             <>
