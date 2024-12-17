@@ -27,7 +27,7 @@ const TRComponent = ({ url }) => {
         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
       >
         <div className="flex items-center gap-x-3">
-          {url.shortUrl}
+          {`  ${import.meta.env.VITE_FrontendUrl}/redirect/${url.shotLink}`}
           <button
             onClick={handleCopyToClipboard}
             className="text-xl cursor-pointer tooltip  tooltip-top bg-gray-700 p-2 rounded-full"

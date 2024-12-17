@@ -69,7 +69,9 @@ const Table = ({ urls }) => {
                 <span className="font-bold">Short Link: </span>
                 <div className="flex items-center gap-x-2">
                   <span className="text-blue-400 break-all">
-                    {url.shortUrl}
+                    {`${import.meta.env.VITE_FrontendUrl}/redirect/${
+                      url.shotLink
+                    }`}
                   </span>
                   <button
                     onClick={() => handleCopyToClipboard(url)}
