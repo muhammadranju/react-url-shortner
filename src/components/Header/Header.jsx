@@ -1,14 +1,39 @@
-import { useContext } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import { CiLogin } from "react-icons/ci";
+import { TbLayoutDashboardFilled } from "react-icons/tb";
+import { BsMenuButtonFill } from "react-icons/bs";
+import { FiLogOut } from "react-icons/fi";
+
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
-import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher";
 import { Button } from "@headlessui/react";
+import { FaRegUser } from "react-icons/fa";
 
 const Header = () => {
   const { user, signOutUser } = useContext(AuthContext);
   const cookie = Cookies.get("__myapp_isLoggedIn");
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Toggle dropdown
+  const handleDropdownToggle = () => {
+    setDropdownOpen((prev) => !prev);
+  };
 
   return (
     <header className="pt-3 sticky top-0 z-50 bg-gray-800/20 backdrop-blur-lg">
@@ -39,25 +64,23 @@ const Header = () => {
                 tabIndex={0}
                 className="menu menu-sm dropdown-content mt-3 w-52 bg-gray-800 rounded-box shadow-lg z-[1] p-2 space-y-2"
               >
-                <>
-                  <li>
-                    <Link
-                      to={"/login"}
-                      className="btn btn-sm rounded-full  bg-gray-700 border-gray-500 text-white font-bold hover:bg-gray-600"
-                    >
-                      Login
-                      <CiLogin className="text-xl" />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to={"/register"}
-                      className="btn btn-sm rounded-full bg-blue-500 text-white font-bold hover:bg-blue-600"
-                    >
-                      Register Now
-                    </Link>
-                  </li>
-                </>
+                <li>
+                  <Link
+                    to={"/login"}
+                    className="btn btn-sm rounded-full bg-gray-700 border-gray-500 text-white font-bold hover:bg-gray-600"
+                  >
+                    Login
+                    <CiLogin className="text-xl" />
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to={"/register"}
+                    className="btn btn-sm rounded-full bg-blue-500 text-white font-bold hover:bg-blue-600"
+                  >
+                    Register Now
+                  </Link>
+                </li>
               </ul>
             </div>
           ) : (
@@ -76,39 +99,91 @@ const Header = () => {
         <div className="navbar-end gap-x-3 flex items-center">
           {cookie ? (
             <>
-              <div className="hidden sm:block">
-                <small className="text-gray-400">Welcome</small>
-                <h4 className="text-white font-semibold">
-                  {user?.displayName || "User Name"}
-                </h4>
+              {/* Profile Photo Dropdown */}
+              <div className="relative" ref={dropdownRef}>
+                <div
+                  className="flex items-center gap-x-2 hover:bg-white/10 p-1 rounded-lg lg:px-3 transition-colors cursor-pointer"
+                  onClick={handleDropdownToggle}
+                >
+                  <div className="bg-white/90 p-[2px] rounded-full">
+                    <img
+                      src={
+                        user?.photoURL ||
+                        "https://www.gravatar.com/avatar/2f0b64d14b2d2bf2c0b6e3d1b47d3a94?s=200&d=mp"
+                      }
+                      className="lg:w-8 w-9 rounded-full"
+                      alt="Profile"
+                    />
+                  </div>
+                  <div className="hidden sm:block flex flex-col">
+                    <span className="text-white font-semibold text-sm block -mb-1">
+                      {user?.displayName || "User Name"}
+                    </span>
+                    <small className="text-gray-400">Personal</small>
+                  </div>
+                </div>
+
+                {/* Dropdown Menu */}
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-[#181822] shadow-lg rounded-lg z-50">
+                    <ul className="py-2 text-gray-200  rounded-md border border-gray-500/50 p-1">
+                      <li className=" px-4 py-2 flex items-center space-x-2 border-b font-bold  border-b-gray-500/50  ">
+                        <BsMenuButtonFill />
+                        <span> My Account</span>
+                      </li>
+
+                      <li className="mt-1">
+                        <Link
+                          to={"/profile"}
+                          className=" px-4 py-2 flex items-center space-x-2  hover:bg-gray-700 rounded-lg"
+                        >
+                          <FaRegUser />
+                          <span>Profile</span>
+                        </Link>
+                      </li>
+
+                      <li className="mb-1">
+                        <Link
+                          to={"/dashboard"}
+                          className=" px-4 py-2 flex items-center space-x-2  hover:bg-gray-700 rounded-lg"
+                        >
+                          <TbLayoutDashboardFilled />
+                          <span> Dashboard</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <div className="border-b-[1px] border-gray-500/50"></div>
+                      </li>
+                      <li>
+                        <div
+                          onClick={() => {
+                            setDropdownOpen(false);
+                            signOutUser();
+                          }}
+                          className=" text-red-500 transition-colors px-4 py-2 flex cursor-pointer items-center space-x-2  hover:bg-gray-700 rounded-lg"
+                        >
+                          <FiLogOut />
+                          <span> Logout</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                )}
               </div>
 
-              <Link to={"/dashboard"}>
-                <div className="bg-white/90 p-1 rounded-full">
-                  <img
-                    src={
-                      user?.photoURL ||
-                      "https://www.gravatar.com/avatar/2f0b64d14b2d2bf2c0b6e3d1b47d3a94?s=200&d=mp"
-                    }
-                    className="lg:w-9 lg:h-9 w-9 rounded-full"
-                    alt="Profile"
-                  />
-                </div>
-              </Link>
-
-              <Link to={"/"} onClick={signOutUser}>
-                <Button className="inline-flex  items-center gap-2 rounded-full bg-gray-700 py-2.5 lg:px-5 lg:pr-5 px-3 pr-4 text-sm/5 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
-                  {/* <span className="lg:hidden">Log</span> */}
+              {/* Logout Button */}
+              {/* <Link to={"/"} onClick={signOutUser}>
+                <Button className="inline-flex items-center gap-2 rounded-full bg-gray-700 py-2.5 lg:px-5 px-3 text-sm/5 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-gray-600">
                   <span className="hidden lg:block">Log Out</span>
                   <CiLogin className="text-2xl" />
                 </Button>
-              </Link>
+              </Link> */}
             </>
           ) : (
             <>
               {/* Login Button */}
               <Link to={"/login"}>
-                <Button className="inline-flex  items-center gap-2 rounded-full bg-gray-700 py-2.5 px-4 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
+                <Button className="inline-flex items-center gap-2 rounded-full bg-gray-700 py-2.5 px-4 text-sm font-semibold text-white shadow-inner hover:bg-gray-600">
                   Login
                   <CiLogin className="text-xl" />
                 </Button>
@@ -116,7 +191,7 @@ const Header = () => {
               {/* Register Button */}
               <div className="hidden lg:flex">
                 <Link to={"/register"}>
-                  <Button className="inline-flex  items-center gap-2 rounded-full bg-blue-700 py-2.5 px-4 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-blue-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
+                  <Button className="inline-flex items-center gap-2 rounded-full bg-blue-700 py-2.5 px-4 text-sm font-semibold text-white shadow-inner hover:bg-blue-600">
                     Register Now
                   </Button>
                 </Link>
@@ -124,8 +199,6 @@ const Header = () => {
             </>
           )}
         </div>
-
-        {/* Theme Switcher */}
       </div>
     </header>
   );
