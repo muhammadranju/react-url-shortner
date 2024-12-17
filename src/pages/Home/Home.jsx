@@ -6,6 +6,8 @@ import ManageLinks from "../../components/ManageLinks/ManageLinks";
 import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
 import HeroSection from "../../components/HeroSection/HeroSection";
+import Feature from "../../components/Feature/Feature";
+import Team from "../../components/Team/Team";
 const Home = () => {
   const { setRefetch } = useContext(AuthContext);
   const isCookeUpdated = Cookies.get("__myapp_user_profile_updated");
@@ -23,6 +25,8 @@ const Home = () => {
       <Heading></Heading>
       <ManageLinks></ManageLinks>
       <AdvancedAnalytics></AdvancedAnalytics>
+      <Feature />
+      <Team />
     </section>
   );
 };
