@@ -8,7 +8,9 @@ import { Button } from "@headlessui/react";
 
 const Table = ({ urls }) => {
   const handleCopyToClipboard = (url) => {
-    navigator.clipboard.writeText(url.shortUrl);
+    navigator.clipboard.writeText(
+      `${import.meta.env.VITE_FrontendUrl}/redirect/${url.shotLink}`
+    );
     toast.success("Copied!");
   };
 
@@ -114,7 +116,9 @@ const Table = ({ urls }) => {
               <div className="mt-2">
                 <span className="font-bold">Action: </span>
                 <a
-                  href={url.shortUrl}
+                  href={`${import.meta.env.VITE_FrontendUrl}/redirect/${
+                    url.shotLink
+                  }`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

@@ -11,7 +11,7 @@ const TRComponent = ({ url }) => {
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(
-      `${import.meta.env.VITE_BackendUrl}/url/${url.shotLink}`
+      `${import.meta.env.VITE_FrontendUrl}/redirect/${url.shotLink}`
     );
 
     setIsCopied(true);
@@ -68,7 +68,7 @@ const TRComponent = ({ url }) => {
       <td className="px-6 py-4">{url.dateTime}</td>
       <td className="px-6 py-4">
         <a
-          href={`${import.meta.env.VITE_BackendUrl}/url/${url.shotLink}`}
+          href={`${import.meta.env.VITE_FrontendUrl}/redirect/${url.shotLink}`}
           target="_blank"
         >
           <Button className="inline-flex  items-center gap-2 rounded-full bg-gray-700 py-2.5 lg:px-5 lg:pr-5 px-3 pr-4 text-xs/4 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">

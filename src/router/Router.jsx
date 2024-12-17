@@ -6,6 +6,7 @@ import Register from "../pages/Auth/Register";
 import DashboardOutlet from "../pages/Dashboard/DashboardOutlet";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import PrivateRoutes from "./PrivateRoute";
+import Redirect from "../pages/Redirect/Redirect";
 
 const Router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const Router = createBrowserRouter([
       {
         path: "register",
         element: <Register />,
+      },
+      {
+        path: "redirect/:id",
+        element: <Redirect />,
       },
       {
         path: "limit-over",
