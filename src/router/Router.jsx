@@ -7,6 +7,7 @@ import DashboardOutlet from "../pages/Dashboard/DashboardOutlet";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import PrivateRoutes from "./PrivateRoute";
 import Redirect from "../pages/Redirect/Redirect";
+import Profile from "../pages/Profile/Profile";
 
 const Router = createBrowserRouter([
   {
@@ -35,7 +36,11 @@ const Router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <Login />,
+        element: (
+          <PrivateRoutes>
+            <Profile />
+          </PrivateRoutes>
+        ),
       },
       {
         path: "login",

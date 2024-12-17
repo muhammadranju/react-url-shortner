@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="footer footer-center bg-base-300/30 text-neutral-400 p-4 bg-gray-100 dark:bg-gray-900/60">
+    <footer className="footer footer-center bg-base-300/30 text-neutral-400 p-4 bg-gray-100 dark:bg-[#18182236]">
       <aside>
         <p>
           Copyright © {new Date().getFullYear()} - All right reserved by
