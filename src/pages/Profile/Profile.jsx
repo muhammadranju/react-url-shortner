@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import bgPhoto from "../../assets/bg-photo.jpeg";
 
 const Profile = () => {
   const localUserData = JSON.parse(localStorage.getItem("userData"));
@@ -9,8 +10,7 @@ const Profile = () => {
         <div
           className="absolute top-0 w-full h-full bg-center bg-cover rounded-2xl"
           style={{
-            backgroundImage:
-              'url("https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2710&q=80")',
+            backgroundImage: `url(${bgPhoto})`,
           }}
         >
           <span className="w-full h-full absolute opacity-50 bg-black/70"></span>
