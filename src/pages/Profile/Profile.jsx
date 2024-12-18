@@ -6,7 +6,7 @@ const Profile = () => {
   return (
     <>
       {/* TailwindCSS Responsive Design */}
-      <section className="relative block h-[400px] sm:h-[500px]">
+      <section className="relative block lg:h-[400px] h-[300px] sm:h-[500px] mt-10 lg:mt-5">
         <div
           className="absolute top-0 w-full h-full bg-center bg-cover rounded-2xl"
           style={{
