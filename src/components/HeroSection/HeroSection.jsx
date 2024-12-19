@@ -29,11 +29,11 @@ const HeroSection = () => {
         </div>
       </div>
       {/* Right Image Section */}
-      <div className="relative lg:mt-0 mt-10  lg:w-[43%] border-2 border-gray-100/10 p-2 rounded-2xl">
+      <div className="relative lg:mt-0 mt-10  lg:w-[45%] border-2 border-gray-100/10 rounded-lg">
         <img
           src={analyticsImg}
           alt="Link Toolbox"
-          className=" rounded-2xl drop-shadow-lg w-[100%]"
+          className=" rounded-lg drop-shadow-lg w-[100%]"
         />
         {/* Labels around the image */}
       </div>

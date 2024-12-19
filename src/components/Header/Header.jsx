@@ -77,7 +77,7 @@ const Header = () => {
                     to={"/register"}
                     className="btn btn-sm rounded-full bg-blue-500 text-white font-bold hover:bg-blue-600"
                   >
-                    Register Now
+                    Create for Free
                   </Link>
                 </li>
               </ul>
@@ -183,7 +183,7 @@ const Header = () => {
               <div className="hidden lg:flex">
                 <Link to={"/register"}>
                   <Button className="inline-flex items-center gap-2 rounded-full bg-blue-700 py-2.5 px-4 text-sm font-semibold text-white shadow-inner hover:bg-blue-600">
-                    Register Now
+                    Create for Free
                   </Button>
                 </Link>
               </div>
