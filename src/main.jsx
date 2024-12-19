@@ -9,12 +9,12 @@ import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./context/ThemeProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <AuthProvider>
-        <RouterProvider router={Router} />
-        <Toaster />
-      </AuthProvider>
-    </ThemeProvider>
-  </StrictMode>
+  // <StrictMode>
+  <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <AuthProvider>
+      <RouterProvider router={Router} />
+      <Toaster />
+    </AuthProvider>
+  </ThemeProvider>
+  // </StrictMode>
 );

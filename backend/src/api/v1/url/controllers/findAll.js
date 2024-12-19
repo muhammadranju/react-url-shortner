@@ -12,6 +12,8 @@ const findAll = async (req, res) => {
       .limit(limit);
 
     const totalCount = await ShortUrl.countDocuments();
+    const totalClicks = shortUrls.reduce((sum, url) => sum + url.clicks, 0);
+    const inactiveLinks = shortUrls.filter((url) => url.clicks >= 1000).length;
 
     res.status(200).json({
       message: "All short URLs retrieved successfully",
@@ -19,6 +21,8 @@ const findAll = async (req, res) => {
       totalPages: Math.ceil(totalCount / limit),
       currentPage: page,
       data: shortUrls,
+      totalClicks,
+      inactiveLinks,
     });
   } catch (error) {
     console.log(error);
@@ -27,3 +31,5 @@ const findAll = async (req, res) => {
 };
 
 module.exports = findAll;
+
+// /v1/api/short-urls
