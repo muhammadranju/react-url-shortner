@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const ShortUrl = require("../../../../models/url.model/url.model");
 
-const updateShortUrl = async (req, res) => {
+const analytics = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -17,14 +17,16 @@ const updateShortUrl = async (req, res) => {
         $or: [{ shotLink: id }],
       });
     }
-
-    res
-      .status(200)
-      .json({ data: findShortUrl, message: "Short URL updated successfully" });
+    console.log(findShortUrl);
+    res.status(200).json({
+      status: 200,
+      success: true,
+      message: "Short URL Analytics",
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Error updating short URL" });
+    res.status(500).json({ message: "Error short URL" });
   }
 };
 
-module.exports = updateShortUrl;
+module.exports = analytics;

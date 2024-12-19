@@ -9,6 +9,7 @@ const findAll = async (req, res) => {
       success: true,
       message: "User found successfully",
       userData: user?.deviceInfo,
+      locationInfo: user?.locationInfo,
     });
   } catch (error) {
     console.log(error);

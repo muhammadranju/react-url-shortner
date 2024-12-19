@@ -13,8 +13,9 @@ import {
 } from "recharts";
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
+  const [url, setUrl] = useState(null);
   const [devicesInfo, setDevicesInfo] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
   const localUserData = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const Profile = () => {
       );
 
       const data = await userData.json();
-      setUser(data);
+      setUrl(data);
 
       const userDevisesInfo = await fetch(
         `${import.meta.env.VITE_BackendUrl}/v1/api/users`,
@@ -43,8 +44,10 @@ const Profile = () => {
           },
         }
       );
-      const userDevicesInfo = await userDevisesInfo.json();
-      setDevicesInfo(userDevicesInfo?.userData);
+      const userInfo = await userDevisesInfo.json();
+      console.log(userInfo.locationInfo);
+      setDevicesInfo(userInfo?.userData);
+      setUserLocation(userInfo?.locationInfo);
     };
     userInfoUpdate();
   }, []);
@@ -98,19 +101,19 @@ const Profile = () => {
                   <div className="flex justify-center py-4 pt-8">
                     <div className="mr-4 p-3 text-center">
                       <span className="text-lg sm:text-xl font-bold block uppercase tracking-wide">
-                        {user?.count || "0"}
+                        {url?.count || "0"}
                       </span>
                       <span className="text-sm text-gray-400">Links</span>
                     </div>
                     <div className="mr-4 p-3 text-center">
                       <span className="text-lg sm:text-xl font-bold block uppercase tracking-wide">
-                        {user?.totalClicks || "0"}
+                        {url?.totalClicks || "0"}
                       </span>
                       <span className="text-sm text-gray-400">Clicks</span>
                     </div>
                     <div className="p-3 text-center">
                       <span className="text-lg sm:text-xl font-bold block uppercase tracking-wide">
-                        {user?.inactiveLinks || "0"}
+                        {url?.inactiveLinks || "0"}
                       </span>
                       <span className="text-sm text-gray-400">Inactive</span>
                     </div>
@@ -193,40 +196,119 @@ const Profile = () => {
           </div>
         </div>
         <div className="h-[447px] lg:w-[50%] w-full mb-10 p-2 py-6 bg-[#181822]/50 border-2 border-gray-100/10 rounded-lg">
-          <span className="text-center text-sm text-gray-200 font-bold ml-10">
-            Clicks per link: {user?.totalClicks || "0"}
-          </span>
-          <ResponsiveContainer widivh="100%" height="100%">
-            <BarChart widivh={40} height={40} data={user?.data}>
-              <Tooltip
-                content={(props) => (
-                  <div>
-                    {props.payload?.map((item) => {
-                      return (
-                        <div
-                          key={item.name}
-                          className="bg-indigo-400 text-white py-2 px-4 rounded-md shadow-lg"
-                        >
-                          <p>
-                            <span>Clicks:{item?.payload?.clicks}</span>
-                          </p>
-                          <p>
-                            <span>
-                              {" "}
-                              Date: {item?.payload?.dateTime?.split(",")[0]}
-                            </span>
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              />
-              <YAxis dataKey="clicks" />
-              <XAxis dataKey="shotLink" />
-              <Bar dataKey="clicks" fill="#6366f1 " />
-            </BarChart>
-          </ResponsiveContainer>
+          {url?.data?.length > 0 ? (
+            <>
+              <span className="text-center text-sm text-gray-200 font-bold ml-10">
+                Clicks per link: {url?.totalClicks || "0"}
+              </span>
+              <ResponsiveContainer widivh="100%" height="100%">
+                <BarChart widivh={40} height={40} data={url?.data}>
+                  <Tooltip
+                    content={(props) => (
+                      <div>
+                        {props.payload?.map((item) => {
+                          return (
+                            <div
+                              key={item.name}
+                              className="bg-indigo-400 text-white py-2 px-4 rounded-md shadow-lg"
+                            >
+                              <p>
+                                <span>Clicks:{item?.payload?.clicks}</span>
+                              </p>
+                              <p>
+                                <span>
+                                  {" "}
+                                  Date: {item?.payload?.dateTime?.split(",")[0]}
+                                </span>
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  />
+                  <YAxis dataKey="clicks" />
+                  <XAxis dataKey="shotLink" />
+                  <Bar dataKey="clicks" fill="#6366f1 " />
+                </BarChart>
+              </ResponsiveContainer>
+            </>
+          ) : (
+            <div className="flex flex-col justify-center items-center mt-40">
+              <span className="text-center lg:text-5xl text-3xl text-gray-200 font-bold lg:ml-10">
+                No Data Found :(
+              </span>
+              <p className="text-center lg:text-2xl mt-5 text-gray-500 text-xl font-semibold lg:ml-10">
+                No data found for this link
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+      {/* User Location Information Section */}
+      <div className="w-full bg-[#181822]/50 border-2 border-gray-100/10 rounded-lg shadow-xl p-6 my-10">
+        <h3 className="text-lg font-medium text-gray-100 mb-4 text-center">
+          Your Location Information
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* IP Address */}
+          <div className="p-4 bg-[#181822ea] rounded-lg shadow-md text-gray-300">
+            <span className="text-sm font-semibold">IP Address:</span>
+            <p className="text-gray-100">{userLocation?.ip || "N/A"}</p>
+          </div>
+
+          {/* Country Name */}
+          <div className="p-4 bg-[#181822ea] rounded-lg shadow-md text-gray-300">
+            <span className="text-sm font-semibold">Country:</span>
+            <p className="text-gray-100">{userLocation?.country || "N/A"}</p>
+          </div>
+
+          {/* City */}
+          <div className="p-4 bg-[#181822ea] rounded-lg shadow-md text-gray-300">
+            <span className="text-sm font-semibold">City:</span>
+            <p className="text-gray-100">{userLocation?.city || "N/A"}</p>
+          </div>
+
+          {/* Postal Code */}
+          <div className="p-4 bg-[#181822ea] rounded-lg shadow-md text-gray-300">
+            <span className="text-sm font-semibold">Postal Code:</span>
+            <p className="text-gray-100">{userLocation?.postal || "N/A"}</p>
+          </div>
+
+          {/* Region */}
+          <div className="p-4 bg-[#181822ea] rounded-lg shadow-md text-gray-300">
+            <span className="text-sm font-semibold">Region:</span>
+            <p className="text-gray-100">{userLocation?.region || "N/A"}</p>
+          </div>
+
+          {/* Country Capital */}
+          <div className="p-4 bg-[#181822ea] rounded-lg shadow-md text-gray-300">
+            <span className="text-sm font-semibold">Capital:</span>
+            <p className="text-gray-100">
+              {userLocation?.country_capital || "N/A"}
+            </p>
+          </div>
+
+          {/* Time Zone */}
+          <div className="p-4 bg-[#181822ea] rounded-lg shadow-md text-gray-300">
+            <span className="text-sm font-semibold">Time Zone:</span>
+            <p className="text-gray-100">{userLocation?.timezone || "N/A"}</p>
+          </div>
+
+          {/* Currency */}
+          <div className="p-4 bg-[#181822ea] rounded-lg shadow-md text-gray-300">
+            <span className="text-sm font-semibold">Currency:</span>
+            <p className="text-gray-100">{userLocation?.currency || "N/A"}</p>
+          </div>
+
+          {/* Latitude & Longitude */}
+          <div className="p-4 bg-[#181822ea] rounded-lg shadow-md text-gray-300">
+            <span className="text-sm font-semibold">Coordinates:</span>
+            <p className="text-gray-100">
+              {userLocation?.latitude || "N/A"},{" "}
+              {userLocation?.longitude || "N/A"}
+            </p>
+          </div>
         </div>
       </div>
     </>

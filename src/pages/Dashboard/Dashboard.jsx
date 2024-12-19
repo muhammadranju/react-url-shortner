@@ -6,29 +6,24 @@ import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import swal from "sweetalert";
-import { useForm } from "react-hook-form";
 import TableSkeleton from "../../components/TableSkeleton/TableSkeleton";
 import TableSkeletonMobile from "../../components/TableSkeleton/TableSkeletonMobile";
 import axios from "axios";
 
 const Dashboard = () => {
   const { user, verifyUser } = useContext(AuthContext);
+
   // State Management
   const [urls, setUrls] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const urlRef = useRef(null);
-  const isCookeUpdated = Cookies.get("__myapp_user_updated");
+  const [urlError, setUrlError] = useState(""); // For validation error
+
+  const urlRef = useRef(null); // Ref for input field
   const token = Cookies.get("__myapp_token");
   const limit = 10; // Fixed number of items per page
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
 
   // Fetch URLs with Pagination
   const fetchUrls = async (page = 1) => {
@@ -55,7 +50,8 @@ const Dashboard = () => {
     }
     setIsLoading(false);
   };
-  console.log(typeof Cookies.get("__myapp_user_updated"));
+
+  // Initial User Info Update and URL Fetch
   useEffect(() => {
     const userInfoUpdate = async () => {
       try {
@@ -88,28 +84,45 @@ const Dashboard = () => {
           }
         );
 
-        // Set cookie to true after the function runs
         Cookies.set("__myapp_user_updated", true);
       } catch (error) {
         console.error("Error updating user info:", error);
       }
     };
 
-    // Check the cookie value
     const isCookieUpdated = Cookies.get("__myapp_user_updated");
 
     if (isCookieUpdated === "false" || !isCookieUpdated) {
       userInfoUpdate();
-    } else {
-      console.log("User info update skipped. Cookie is already true.");
     }
 
     fetchUrls(); // Fetch URLs initially
   }, [user.id]);
 
-  const handelURLSubmit = async (dataUrl) => {
+  // URL Validation Function
+  const isValidURL = (url) => {
+    const urlRegex =
+      /^(https?:\/\/)?((([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})|localhost)(:[0-9]{1,5})?(\/[^\s]*)?$/;
+    return urlRegex.test(url);
+  };
+
+  // Submit Handler
+  const handleURLSubmit = async () => {
+    const inputURL = urlRef.current.value.trim();
+
+    // Validate URL
+    if (!inputURL) {
+      setUrlError("URL field is required.");
+      return;
+    } else if (!isValidURL(inputURL)) {
+      setUrlError("Please enter a valid URL.");
+      return;
+    }
+
+    setUrlError(""); // Clear error if valid
     setIsSubmitting(true);
-    const icon = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${dataUrl.url}/&size=64`;
+
+    const icon = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${inputURL}/&size=64`;
 
     try {
       const res = await fetch(
@@ -121,20 +134,19 @@ const Dashboard = () => {
             authorization: Cookies.get("__myapp_token"),
           },
           body: JSON.stringify({
-            originalUrl: dataUrl.url,
+            originalUrl: inputURL,
             icon: icon,
           }),
         }
       );
-      await verifyUser();
 
       const data = await res.json();
 
       if (res.ok) {
         setUrls([data.links, ...urls]);
         swal("URL created successfully", { icon: "success" });
-        dataUrl.url = "";
-        fetchUrls(1); // Refresh URLs and go to the first page
+        urlRef.current.value = ""; // Clear input field
+        fetchUrls(1); // Refresh URLs
       } else {
         toast.error(data.message);
         if (data.message === "You can't shorten the same URL again") {
@@ -144,30 +156,14 @@ const Dashboard = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error submitting URL:", error);
     }
-
     setIsSubmitting(false);
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      fetchUrls(currentPage + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      fetchUrls(currentPage - 1);
-    }
   };
 
   return (
     <section className="mt-10">
       <div className="flex flex-col items-center gap-y-3 justify-center">
-        <h3 className="lg:hidden flex justify-center items-center text-center  ">
-          Welcome🙂 <span className="font-semibold">{user.displayName} </span>
-        </h3>
         <h1 className="lg:text-5xl text-3xl font-bold text-center bg-gradient-to-r from-indigo-500 via-red-500 to-indigo-500 bg-clip-text text-transparent">
           Shorten Your Loooong Links :)
         </h1>
@@ -184,23 +180,11 @@ const Dashboard = () => {
             <input
               type="text"
               ref={urlRef}
-              name="url"
               placeholder="Enter the link here"
               className="w-full pl-10 pr-28 py-3 rounded-full bg-gray-800/20 text-white border border-gray-50/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              {...register("url", {
-                required: {
-                  value: true,
-                  message: "URL field is required.",
-                },
-                pattern: {
-                  value:
-                    /^(https?:\/\/)?((([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})|localhost)(:[0-9]{1,5})?(\/[^\s]*)?$/,
-                  message: "Please enter a valid URL.",
-                },
-              })}
             />
             <button
-              onClick={handleSubmit(handelURLSubmit)}
+              onClick={handleURLSubmit}
               disabled={isSubmitting}
               className={`absolute right-0 flex justify-center items-center top-0 bottom-0 m-1 px-4 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600  
               ${isSubmitting && "opacity-50 cursor-not-allowed"}`}
@@ -215,13 +199,11 @@ const Dashboard = () => {
               )}
             </button>
           </label>
-          <span className="text-center ">
-            {errors.url && (
-              <span className="text-red-500 text-sm font-bold block mt-2">
-                {errors.url.message}
-              </span>
-            )}
-          </span>
+          {urlError && (
+            <span className="text-red-500 text-sm font-bold block mt-2">
+              {urlError}
+            </span>
+          )}
         </div>
       </div>
 
@@ -237,7 +219,7 @@ const Dashboard = () => {
       {/* Pagination Controls */}
       <div className="flex justify-center mt-10 gap-x-3">
         <button
-          onClick={handlePrevPage}
+          onClick={() => fetchUrls(currentPage - 1)}
           disabled={currentPage === 1}
           className={`btn bg-blue-500 text-white font-bold hover:bg-blue-600 ${
             currentPage === 1 && "opacity-50 cursor-not-allowed"
@@ -251,7 +233,7 @@ const Dashboard = () => {
         </span>
 
         <button
-          onClick={handleNextPage}
+          onClick={() => fetchUrls(currentPage + 1)}
           disabled={currentPage === totalPages}
           className={`btn bg-blue-500 text-white font-bold hover:bg-blue-600 ${
             currentPage === totalPages && "opacity-50 cursor-not-allowed"
