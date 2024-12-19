@@ -11,7 +11,7 @@ const Banner = () => {
           Links
         </span>
       </h2>
-      <p className="text-center pt-3">
+      <p className="text-center pt-3 font-extralight">
         Effortless link management with a user-friendly dashboard and robust
         analytics.
       </p>

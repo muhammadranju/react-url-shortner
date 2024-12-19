@@ -5,7 +5,7 @@ import analyticsImg from "../../assets/analytics-dark.png";
 
 const HeroSection = () => {
   return (
-    <section className="flex lg:flex-row flex-col mb-20 text-gray-100 lg:gap-20 justify-between items-center ">
+    <section className="flex lg:flex-row flex-col lg:my-20 my-10 text-gray-100 lg:gap-20 justify-between items-center ">
       {/* Left Content */}
       <div className="flex flex-col justify-center space-y-6 w-full lg:w-1/2">
         <h1 className="text-4xl lg:text-6xl font-bold ">
@@ -14,7 +14,7 @@ const HeroSection = () => {
             Links
           </span>
         </h1>
-        <p className="text-lg text-gray-300">
+        <p className="text-lg text-gray-300 font-light">
           Effortlessly brand, track, retarget, and A/B test links with our
           feature-rich URL shortener. Explore new horizons and ensure that every
           URL counts for your marketing, e-commerce, and affiliate strategies.

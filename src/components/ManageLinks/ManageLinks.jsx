@@ -2,17 +2,17 @@ import { RiCheckboxCircleFill } from "react-icons/ri";
 import dashBoardImg from "../../assets/dashboard-dark.png";
 const ManageLinks = () => {
   return (
-    <div className="flex flex-col flex-col-reverse lg:flex-row gap-9 mt-16 lg:mt-28">
-      <div className="w-full lg:w-1/2 text-center">
+    <div className="flex flex-col-reverse justify-center items-center lg:flex-row gap-9 lg:my-20 my-10 ">
+      <div className="w-full lg:w-1/2 text-start ">
         <h3 className="font-bold text-2xl lg:text-3xl text-white/85 mb-5">
           Easily Manage Your Links
         </h3>
-        <p className="font-thin text-slate-300 ">
+        <p className="font-extralight text-slate-300 ">
           Our dashboard provides a simple and intuitive interface for managing
           all your shortened links. Organize, edit, and track your links
           effortlessly with our powerful tools.
         </p>
-        <div className="divider py-3"></div>
+        <div className=" border-b border-white/20 my-5"></div>
         <div className="text-start space-y-3 text-white">
           <div className="flex items-center gap-3">
             <RiCheckboxCircleFill className="text-blue-500 text-xl" />
@@ -44,10 +44,10 @@ const ManageLinks = () => {
           </div>
         </div>
       </div>
-      <div className="w-full lg:w-1/2  ">
+      <div className="w-full lg:w-1/2">
         <img
           src={dashBoardImg}
-          className="border border-white/20 rounded-lg"
+          className="border border-white/20 rounded-lg lg:w-[90%]"
         ></img>
       </div>
     </div>

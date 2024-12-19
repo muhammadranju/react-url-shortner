@@ -4,12 +4,12 @@ import { TbWorldWww } from "react-icons/tb";
 
 const Team = () => {
   return (
-    <div className="px-4  mx-auto  md:px-36 lg:px-8 ">
+    <div className="px-4  mx-auto  md:px-36 lg:px-8  my-20 lg:my-20">
       <div className="mx-auto mb-10 lg:max-w-xl sm:text-center">
-        <p className="inline-block lg:px-3 py-px mb-4 text-sm font-bold tracking-wider text-indigo-600 text-center uppercase rounded-full bg-teal-accent-400">
+        <p className="inline-block lg:px-3 py-px mb-4 text-lg font-bold  tracking-wider text-indigo-600 text-center uppercase rounded-full bg-teal-accent-400">
           Know Our Team
         </p>
-        <p className="text-base text-gray-200 md:text-lg">
+        <p className="text-base text-gray-300 md:text-lg font-extralight">
           We are a team of developers and designers who are passionate about
           building the best user experiences for our users.
         </p>
@@ -26,7 +26,7 @@ const Team = () => {
           <div className="flex flex-col justify-center mt-5 sm:mt-0 sm:p-5 sm:col-span-2">
             <p className="text-lg font-bold">Md. Ranju</p>
             <p className="mb-4 text-xs text-gray-200">Backend</p>
-            <p className="mb-4 text-sm tracking-wide text-gray-300">
+            <p className="mb-4 text-sm tracking-wide text-gray-200 font-extralight">
               Ranju is doing Backend of this project. He make all apis and
               database.
             </p>
@@ -66,7 +66,7 @@ const Team = () => {
           <div className="flex flex-col justify-center mt-5 sm:mt-0 sm:p-5 sm:col-span-2">
             <p className="text-lg font-bold">Mukit Hossen</p>
             <p className="mb-4 text-xs text-gray-200">Frontend</p>
-            <p className="mb-4 text-sm tracking-wide text-gray-300">
+            <p className="mb-4 text-sm tracking-wide text-gray-200 font-extralight">
               Mukit is doing Frontend of this project. He make all UI components
               and design.
             </p>

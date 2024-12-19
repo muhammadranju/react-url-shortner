@@ -1,8 +1,8 @@
 const Feature = () => {
   return (
-    <div className=" mt-10 flex flex-col items-center  mx-auto  md:px-24 lg:px-8 lg:py-20">
+    <div className="flex flex-col items-center  mx-auto lg:mt-36 mt-20 mb-20  md:px-24 lg:px-8 ">
       <div className="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
-        <h2 className="max-w-lg mb-6 font-sans text-3xl font-bold leading-none tracking-tight text-gray-100 sm:text-4xl md:mx-auto">
+        <h2 className="max-w-lg mb-6 font-sans text-3xl font-bold leading-none tracking-tight text-gray-100 sm:text-4xl md:mx-auto text-center">
           <span className="relative inline-block">
             <svg
               viewBox="0 0 52 24"
@@ -28,11 +28,11 @@ const Feature = () => {
             </svg>
             <span className="relative">The</span>
           </span>{" "}
-          quick, brown fox jumps over a lazy dog
+          quick and easy way to shorten your links
         </h2>
-        <p className="text-base text-gray-400 md:text-lg">
-          Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-          accusantium doloremque rem aperiam, eaque ipsa quae.
+        <p className="text-base text-gray-300 md:text-lg text-center font-extralight">
+          Shorten your links with Linkly and enjoy the convenience of a user
+          friendly dashboard and robust analytics.
         </p>
       </div>
       <div className="grid gap-8 row-gap-8 lg:grid-cols-3">
@@ -43,9 +43,11 @@ const Feature = () => {
               alt=""
             />
           </div>
-          <h6 className="mb-2 font-semibold leading-5">The good cheese</h6>
-          <p className="max-w-md mb-3 text-sm text-gray-400 sm:mx-auto">
-            Extend the reach and performance of every domain
+          <h6 className="mb-2 font-semibold leading-5">Best Performance</h6>
+          <p className="max-w-md mb-3 text-sm text-gray-300 sm:mx-auto font-extralight">
+            Extend the reach and performance of every domain with Linkly and
+            ensure that every URL counts for your marketing, e-commerce, and
+            affiliate strategies.
           </p>
         </div>
         <div className="sm:text-center flex text-center flex-col items-center">
@@ -55,10 +57,11 @@ const Feature = () => {
               alt=""
             />
           </div>
-          <h6 className="mb-2 font-semibold leading-5">Chainsaw foal hay</h6>
-          <p className="max-w-md mb-3 text-sm text-gray-400 sm:mx-auto">
+          <h6 className="mb-2 font-semibold leading-5">Scalable and Secure</h6>
+          <p className="max-w-md mb-3 text-sm text-gray-300 sm:mx-auto font-extralight">
             Build high-velocity link solutions with the #1 scalable and secure
-            API
+            API for Linkly. Linkly is built with the latest technologies and
+            designed to be scalable and secure.
           </p>
         </div>
         <div className="sm:text-center flex text-center flex-col items-center">
@@ -68,9 +71,11 @@ const Feature = () => {
               alt=""
             />
           </div>
-          <h6 className="mb-2 font-semibold leading-5">Pick up truck</h6>
-          <p className="max-w-md mb-3 text-sm text-gray-400 sm:mx-auto">
-            Make link data work for you
+          <h6 className="mb-2 font-semibold leading-5">User-Friendly</h6>
+          <p className="max-w-md mb-3 text-sm text-gray-300 sm:mx-auto font-extralight">
+            Make link data work for you. Track clicks, geographic, and devices
+            data to optimize your link management strategy with Linkly. Linkly
+            is designed to be user-friendly and easy to use.
           </p>
         </div>
       </div>
