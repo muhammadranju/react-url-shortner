@@ -6,6 +6,7 @@ const update = async (req, res) => {
   try {
     const { userId } = req.params;
 
+    console.log("location", req.body);
     const parser = new UAParser(req.headers["user-agent"]);
     const deviceInfo = parser.getResult();
 
@@ -18,7 +19,8 @@ const update = async (req, res) => {
 
     const findUser = await User.findOne({ _id: userId });
     if (findUser) {
-      findUser.deviceInfo = deviceInfo;
+      findUser.deviceInfo = deviceInfo ?? findUser.deviceInfo;
+      findUser.locationInfo = req.body ?? findUser.locationInfo;
       await findUser.save();
 
       return res.status(200).json({

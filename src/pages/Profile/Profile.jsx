@@ -194,7 +194,7 @@ const Profile = () => {
         </div>
         <div className="h-[447px] lg:w-[50%] w-full mb-10 p-2 py-6 bg-[#181822]/50 border-2 border-gray-100/10 rounded-lg">
           <span className="text-center text-sm text-gray-200 font-bold ml-10">
-            Clicks per link
+            Clicks per link: {user?.totalClicks || "0"}
           </span>
           <ResponsiveContainer widivh="100%" height="100%">
             <BarChart widivh={40} height={40} data={user?.data}>

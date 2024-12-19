@@ -15,6 +15,7 @@ const Home = () => {
   useEffect(() => {
     if (isCookeUpdated === "true") {
       Cookies.set("__myapp_user_profile_updated", false);
+      Cookies.set("__myapp_user_updated", false);
       setRefetch(Date.now());
     }
   }, [setRefetch]);

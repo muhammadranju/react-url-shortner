@@ -4,16 +4,15 @@ import Table from "../../components/Table/Table";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 import Cookies from "js-cookie";
-import { RotatingLines } from "react-loader-spinner";
 import toast from "react-hot-toast";
 import swal from "sweetalert";
 import { useForm } from "react-hook-form";
 import TableSkeleton from "../../components/TableSkeleton/TableSkeleton";
 import TableSkeletonMobile from "../../components/TableSkeleton/TableSkeletonMobile";
+import axios from "axios";
 
 const Dashboard = () => {
-  const { user, loading, verifyUser } = useContext(AuthContext);
-
+  const { user, verifyUser } = useContext(AuthContext);
   // State Management
   const [urls, setUrls] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,24 +55,57 @@ const Dashboard = () => {
     }
     setIsLoading(false);
   };
-
+  console.log(typeof Cookies.get("__myapp_user_updated"));
   useEffect(() => {
     const userInfoUpdate = async () => {
-      await fetch(
-        `${import.meta.env.VITE_BackendUrl}/v1/api/users/${user.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      Cookies.set("__myapp_user_updated", true);
-      await fetchUrls(); // Initially fetch URLs
+      try {
+        const ipAddress = await axios.get("https://api.ipify.org?format=json");
+        const response = await axios.get(
+          `https://ipapi.co/${ipAddress?.data?.ip}/json/`
+        );
+        const data = response.data;
+
+        await fetch(
+          `${import.meta.env.VITE_BackendUrl}/v1/api/users/${user.id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              ip: data.ip,
+              city: data.city,
+              postal: data.postal,
+              region: data.region,
+              country: data.country_name,
+              country_capital: data.country_capital,
+              timezone: data.timezone,
+              currency: data.currency,
+              latitude: data.latitude,
+              longitude: data.longitude,
+            }),
+          }
+        );
+
+        // Set cookie to true after the function runs
+        Cookies.set("__myapp_user_updated", true);
+      } catch (error) {
+        console.error("Error updating user info:", error);
+      }
     };
 
-    userInfoUpdate();
-  }, [user.id, isCookeUpdated]);
+    // Check the cookie value
+    const isCookieUpdated = Cookies.get("__myapp_user_updated");
+
+    if (isCookieUpdated === "false" || !isCookieUpdated) {
+      userInfoUpdate();
+    } else {
+      console.log("User info update skipped. Cookie is already true.");
+    }
+
+    fetchUrls(); // Fetch URLs initially
+  }, [user.id]);
 
   const handelURLSubmit = async (dataUrl) => {
     setIsSubmitting(true);
@@ -192,21 +224,6 @@ const Dashboard = () => {
           </span>
         </div>
       </div>
-
-      {/* Render Skeleton or Data */}
-      {/* {isLoading ? (
-        <>
-          <TableSkeleton />
-          <TableSkeletonMobile />
-        </>
-      ) : urls?.length > 0 ? (
-        <>
-          <Table urls={urls} />
-         
-        </>
-      ) : (
-        <div className="text-center font-bold text-white">No Data Found</div>
-      )} */}
 
       {isLoading ? (
         <>
