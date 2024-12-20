@@ -24,6 +24,13 @@ const urlSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    analytics: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Analytics",
+        required: true,
+      },
+    ],
 
     user: {
       type: mongoose.Schema.Types.ObjectId,

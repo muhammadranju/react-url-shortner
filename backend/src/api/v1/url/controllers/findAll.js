@@ -3,7 +3,7 @@ const ShortUrl = require("../../../../models/url.model/url.model");
 const findAll = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = 10;
+    const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
     const shortUrls = await ShortUrl.find({ user: req.user.id })
