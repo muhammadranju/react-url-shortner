@@ -46,7 +46,7 @@ router.get(
 
     // Redirect to frontend with the token
     res.redirect(
-      `${process.env.FRONTEND_URL}/register?token=${token}&refreshToken=${refreshToken}`
+      `${process.env.FRONTEND_URL}/auth/register?token=${token}&refreshToken=${refreshToken}`
     );
   }
 );

@@ -1,5 +1,20 @@
 /* eslint-disable no-undef */
+const Analytics = require("../../../../models/analyticsSchema.model/analyticsSchema.model");
 const ShortUrl = require("../../../../models/url.model/url.model");
+const { UAParser } = require("ua-parser-js");
+
+const getUserInfo = (req) => {
+  const parser = new UAParser(req.headers["user-agent"]);
+  const deviceInfo = parser.getResult();
+  console.log(deviceInfo);
+  return {
+    location: "India", // Example location (In production, use a geo-IP library)
+    device: {
+      name: deviceInfo?.device?.model || "Windows",
+      type: deviceInfo?.device?.type || "Desktop",
+    },
+  };
+};
 
 const findOne = async (req, res) => {
   const MAX_HITS = 1000; // Define max hits threshold as a constant
@@ -22,6 +37,19 @@ const findOne = async (req, res) => {
     if (link.clicks > MAX_HITS) {
       return res.redirect(`${process.env.FRONTEND_URL}/limit-over`);
     }
+
+    const userInfo = getUserInfo(req); // Simulated user info
+    const newAnalytics = new Analytics({
+      shortUrlId: link._id,
+      location: userInfo.location,
+      device: userInfo.device,
+    });
+    console.log(userInfo);
+
+    // Save the analytics data to the database
+    link.analytics.push(newAnalytics._id);
+    await link.save();
+    await newAnalytics.save();
 
     // Redirect to the original URL if all conditions are met
     return res.status(302).redirect(link.originalUrl);
