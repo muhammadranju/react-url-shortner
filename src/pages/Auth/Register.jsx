@@ -75,7 +75,7 @@ const RegistrationLoginPage = () => {
     if (result.success) {
       toast.success("User created successfully!");
       Cookies.set("__myapp_user_updated", false);
-      navigate("/login");
+      navigate("/auth/login");
     }
     setErrors(result.message);
     setIsSubmitting(false);
@@ -243,7 +243,7 @@ const RegistrationLoginPage = () => {
               Sign up with Google
             </button>
             <div className="text-center">
-              <Link to="/login">
+              <Link to="/auth/login">
                 <button
                   type="button"
                   className="text-indigo-400 hover:underline"

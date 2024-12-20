@@ -8,12 +8,16 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import PrivateRoutes from "./PrivateRoute";
 import Redirect from "../pages/Redirect/Redirect";
 import Profile from "../pages/Profile/Profile";
+import Analytics from "../pages/Analytics/Analytics";
+import LimitExceeded from "../pages/LimitExceeded/LimitExceeded";
+import NotFound from "../pages/NotFound/NotFound";
+import NotFoundOutlet from "../components/NotFoundOutlet/NotFoundOutlet";
 
 const Router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    errorElement: <h1>Error</h1>,
+    errorElement: <NotFoundOutlet />,
     children: [
       {
         index: true,
@@ -24,7 +28,7 @@ const Router = createBrowserRouter([
         element: <DashboardOutlet />,
         children: [
           {
-            path: "dashboard",
+            path: "user/dashboard",
 
             element: (
               <PrivateRoutes>
@@ -35,7 +39,7 @@ const Router = createBrowserRouter([
         ],
       },
       {
-        path: "profile",
+        path: "user/profile",
         element: (
           <PrivateRoutes>
             <Profile />
@@ -43,24 +47,28 @@ const Router = createBrowserRouter([
         ),
       },
       {
-        path: "login",
+        path: "auth/login",
         element: <Login />,
       },
       {
-        path: "register",
+        path: "auth/register",
         element: <Register />,
       },
       {
-        path: "redirect/:id",
+        path: "r/:id",
         element: <Redirect />,
       },
       {
+        path: "analytics/:id",
+        element: <Analytics />,
+      },
+      {
         path: "limit-over",
-        element: <h1>Limit Over</h1>,
+        element: <LimitExceeded />,
       },
       {
         path: "not-found",
-        element: <h1>URL Not Found</h1>,
+        element: <NotFound />,
       },
     ],
   },

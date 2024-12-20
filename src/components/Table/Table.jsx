@@ -4,12 +4,13 @@ import TRComponent from "./TR";
 import { FaLinkSlash } from "react-icons/fa6";
 import { FaCopy } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { Button } from "@headlessui/react";
+// import { Button } from "@headlessui/react";
+import SelectMenu from "../SelectMenu/SelectMenu";
 
 const Table = ({ urls }) => {
   const handleCopyToClipboard = (url) => {
     navigator.clipboard.writeText(
-      `${import.meta.env.VITE_FrontendUrl}/redirect/${url.shotLink}`
+      `${import.meta.env.VITE_FrontendUrl}/r/${url.shotLink}`
     );
     toast.success("Copied!");
   };
@@ -69,9 +70,7 @@ const Table = ({ urls }) => {
                 <span className="font-bold">Short Link: </span>
                 <div className="flex items-center gap-x-2">
                   <span className="text-blue-400 break-all">
-                    {`${import.meta.env.VITE_FrontendUrl}/redirect/${
-                      url.shotLink
-                    }`}
+                    {`${import.meta.env.VITE_FrontendUrl}/r/${url.shotLink}`}
                   </span>
                   <button
                     onClick={() => handleCopyToClipboard(url)}
@@ -117,18 +116,18 @@ const Table = ({ urls }) => {
               </div>
               <div className="mt-2">
                 <span className="font-bold">Action: </span>
-                <a
-                  href={`${import.meta.env.VITE_FrontendUrl}/redirect/${
+                <SelectMenu url={url} />
+                {/* <a
+                  href={`${import.meta.env.VITE_FrontendUrl}/r/${
                     url.shotLink
                   }`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <Button className="inline-flex  items-center gap-2 rounded-full bg-gray-700 py-2.5 lg:px-5 lg:pr-5 px-3 pr-4 text-xs/4 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
-                    {/* <span className="lg:hidden">Log</span> */}
                     Open Link
                   </Button>
-                </a>
+                </a> */}
               </div>
             </div>
           ))

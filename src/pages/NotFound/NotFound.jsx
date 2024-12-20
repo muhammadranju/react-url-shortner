@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const NotFound = () => {
   return (
-    <div className=" py-24 flex flex-col justify-center items-center px-4 rounded-xl bg-[#181822]/15">
+    <div className="py-24 flex flex-col justify-center items-center px-4 rounded-xl bg-[#181822]/15">
       {/* Main Card Container */}
       <div className="bg-[#1f1f2f91] shadow-lg rounded-lg p-8 max-w-lg w-full text-center border border-gray-100/10">
         {/* Not Found Icon */}
@@ -29,8 +29,8 @@ const NotFound = () => {
           Link Not Found
         </h1>
         <p className="text-gray-300 mb-6 leading-relaxed">
-          Oops! The link you're looking for doesn't exist or has been removed.
-          Please check the URL or return to the homepage.
+          Oops! The link you&apos;re looking for doesn&apos;t exist or has been
+          removed. Please check the URL or return to the homepage.
         </p>
 
         {/* Suggested Action */}
@@ -55,7 +55,7 @@ const NotFound = () => {
         <p className="text-sm text-gray-400">
           Need Help?{" "}
           <a
-            href="mailto:support@example.com"
+            href="mailto:mdranju23@gmail.com"
             className="text-[#22d3ee] hover:underline font-semibold"
           >
             Contact Support
@@ -68,10 +68,10 @@ const NotFound = () => {
         <p>
           For any inquiries, email us at{" "}
           <a
-            href="mailto:support@example.com"
+            href="mailto:mdranju23@gmail.com"
             className="text-[#22d3ee] hover:underline"
           >
-            support@example.com
+            mdranju23@gmail.com
           </a>
           .
         </p>

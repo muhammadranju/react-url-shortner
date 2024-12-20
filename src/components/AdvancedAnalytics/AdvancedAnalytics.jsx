@@ -3,8 +3,8 @@ import homepage_hero from "../../assets/homepage_hero_alpha.png";
 const AdvancedAnalytics = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-16 lg:my-20 my-10 ">
-      <div className="w-full lg:w-1/2 border border-white/20 p-1 rounded-lg">
-        <img src={homepage_hero} className=" rounded-lg"></img>
+      <div className="w-full lg:w-1/2 border border-white/20 rounded-lg">
+        <img src={homepage_hero} className=" rounded-lg  lg:w-full"></img>
       </div>
       <div className="w-full lg:w-1/2  flex flex-col justify-center  ">
         <h3 className="font-bold text-2xl lg:text-3xl text-white/85 mb-5">

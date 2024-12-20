@@ -1,17 +1,18 @@
 /* eslint-disable react/prop-types */
-import { Button } from "@headlessui/react";
+// import { Button } from "@headlessui/react";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { FaCopy } from "react-icons/fa";
 import { FaLinkSlash } from "react-icons/fa6";
 import { IoIosLink } from "react-icons/io";
+import SelectMenu from "../SelectMenu/SelectMenu";
 
 const TRComponent = ({ url }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(
-      `${import.meta.env.VITE_FrontendUrl}/redirect/${url.shotLink}`
+      `${import.meta.env.VITE_FrontendUrl}/r/${url.shotLink}`
     );
 
     setIsCopied(true);
@@ -27,7 +28,7 @@ const TRComponent = ({ url }) => {
         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
       >
         <div className="flex items-center gap-x-3">
-          {`  ${import.meta.env.VITE_FrontendUrl}/redirect/${url.shotLink}`}
+          {`  ${import.meta.env.VITE_FrontendUrl}/r/${url.shotLink}`}
           <button
             onClick={handleCopyToClipboard}
             className="text-xl cursor-pointer tooltip  tooltip-top bg-gray-700 p-2 rounded-full"
@@ -67,15 +68,7 @@ const TRComponent = ({ url }) => {
 
       <td className="px-6 py-4">{url.dateTime}</td>
       <td className="px-6 py-4">
-        <a
-          href={`${import.meta.env.VITE_FrontendUrl}/redirect/${url.shotLink}`}
-          target="_blank"
-        >
-          <Button className="inline-flex  items-center gap-2 rounded-full bg-gray-700 py-2.5 lg:px-5 lg:pr-5 px-3 pr-4 text-xs/4 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
-            {/* <span className="lg:hidden">Log</span> */}
-            <span className="hidden lg:block">Open Link</span>
-          </Button>
-        </a>
+        <SelectMenu url={url} />
       </td>
     </tr>
   );

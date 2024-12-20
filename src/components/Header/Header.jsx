@@ -65,7 +65,7 @@ const Header = () => {
               >
                 <li>
                   <Link
-                    to={"/login"}
+                    to={"/auth/login"}
                     className="btn btn-sm rounded-full bg-gray-700 border-gray-500 text-white font-bold hover:bg-gray-600"
                   >
                     Login
@@ -74,7 +74,7 @@ const Header = () => {
                 </li>
                 <li>
                   <Link
-                    to={"/register"}
+                    to={"/auth/register"}
                     className="btn btn-sm rounded-full bg-blue-500 text-white font-bold hover:bg-blue-600"
                   >
                     Create for Free
@@ -133,7 +133,7 @@ const Header = () => {
 
                       <li className="mt-1">
                         <Link
-                          to={"/profile"}
+                          to={"/user/profile"}
                           className=" px-4 py-2 flex items-center space-x-2  hover:bg-gray-700 rounded-lg"
                         >
                           <FaRegUser />
@@ -143,7 +143,7 @@ const Header = () => {
 
                       <li className="mb-1">
                         <Link
-                          to={"/dashboard"}
+                          to={"/user/dashboard"}
                           className=" px-4 py-2 flex items-center space-x-2  hover:bg-gray-700 rounded-lg"
                         >
                           <TbLayoutDashboardFilled />
@@ -173,7 +173,7 @@ const Header = () => {
           ) : (
             <>
               {/* Login Button */}
-              <Link to={"/login"}>
+              <Link to={"/auth/login"}>
                 <Button className="inline-flex items-center gap-2 rounded-full bg-gray-700 py-2.5 px-4 text-sm font-semibold text-white shadow-inner hover:bg-gray-600">
                   Login
                   <CiLogin className="text-xl" />
@@ -181,7 +181,7 @@ const Header = () => {
               </Link>
               {/* Register Button */}
               <div className="hidden lg:flex">
-                <Link to={"/register"}>
+                <Link to={"/auth/register"}>
                   <Button className="inline-flex items-center gap-2 rounded-full bg-blue-700 py-2.5 px-4 text-sm font-semibold text-white shadow-inner hover:bg-blue-600">
                     Create for Free
                   </Button>

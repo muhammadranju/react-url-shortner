@@ -182,7 +182,7 @@ const Login = () => {
             </button>
 
             <div className="text-center">
-              <Link to="/register">
+              <Link to="/auth/register">
                 <button
                   type="button"
                   className="text-indigo-400 hover:underline"

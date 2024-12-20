@@ -16,7 +16,7 @@ const Banner = () => {
         analytics.
       </p>
       <div className="flex items-center justify-center mt-7">
-        <Link to="/dashboard">
+        <Link to="/user/dashboard">
           <Button className="inline-flex  items-center gap-2 rounded-full bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 pl-5 data-[focus]:outline-white">
             Get Started for free
             <MdOutlineChevronRight className="text-4xl font-thin" />
