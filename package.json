@@ -27,7 +27,8 @@
     "react-loader-spinner": "^6.1.6",
     "react-router-dom": "^6.28.0",
     "recharts": "^2.15.0",
-    "sweetalert": "^2.1.2"
+    "sweetalert": "^2.1.2",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
