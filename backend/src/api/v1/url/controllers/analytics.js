@@ -30,9 +30,9 @@ const analytics = async (req, res) => {
         // Create a new entry for the date-time
         acc.push({
           name: dateTimeKey,
-          Desktop: type === "desktop" ? 1 : 0,
-          Mobile: type === "mobile" ? 1 : 0,
-          Tablet: type === "tablet" ? 1 : 0
+          desktop: type === "desktop" ? 1 : 0,
+          mobile: type === "mobile" ? 1 : 0,
+          tablet: type === "tablet" ? 1 : 0
         });
       }
 
