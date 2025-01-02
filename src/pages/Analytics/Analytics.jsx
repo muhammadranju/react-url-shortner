@@ -137,25 +137,25 @@ const Analytics = () => {
               />
               <Line
                 type="monotone"
-                dataKey="Desktop"
+                dataKey="desktop"
                 stroke="#6366f1"
                 strokeWidth={2}
                 dot={{ r: 4 }}
               />
               <Line
                 type="monotone"
-                dataKey="Mobile"
+                dataKey="mobile"
                 stroke="#22d3ee"
                 strokeWidth={2}
                 dot={{ r: 4 }}
               />
-              {/* <Line
+              <Line
                 type="monotone"
-                dataKey="Tablet"
+                dataKey="tablet"
                 stroke="#f472b6"
                 strokeWidth={2}
                 dot={{ r: 4 }}
-              /> */}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
