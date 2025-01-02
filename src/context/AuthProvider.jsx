@@ -54,11 +54,12 @@ const AuthProvider = ({ children }) => {
   const [refetch, setRefetch] = useState();
   const localUserData = JSON.parse(localStorage.getItem("userData"));
 
-  const token = Cookies.get("__myapp_token");
-  const refreshToken = Cookies.get("__myapp_refreshToken");
+
 
   const signOutUser = () => {
-    
+      setUser(null);
+    setLoading(false);
+    setIsLoggedIn(false);      
     Cookies.remove("__myapp_isLoggedIn");
     Cookies.remove("__myapp_user_updated");
     Cookies.remove("__myapp_token");
@@ -66,13 +67,12 @@ const AuthProvider = ({ children }) => {
     Cookies.remove("__myapp_user_profile_updated");
     Cookies.remove("refresh_token");
     localStorage.removeItem("userData");
-    setUser(null);
-    setLoading(false);
-    setIsLoggedIn(false);
   };
 
   const verifyUser = async () => {
 
+    const token = Cookies.get("__myapp_token");
+    const refreshToken = Cookies.get("__myapp_refreshToken");
     if (!token && !refreshToken) {
       signOutUser();
       return;

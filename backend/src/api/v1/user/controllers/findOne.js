@@ -77,6 +77,7 @@ const findOne = async (req, res) => {
       message: "User found successfully",
       userData,
     });
+    console.log(user)
   } catch (error) {
     console.error("Error in findOne:", error);
     res.status(500).json({

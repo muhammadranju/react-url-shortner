@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const moment = require("moment");
+// const moment = require("moment");
 
 const analyticsSchema = new mongoose.Schema(
   {
@@ -24,11 +24,11 @@ const analyticsSchema = new mongoose.Schema(
     dateTime: {
       date: {
         type: String,
-        default: moment().format("L"),
+        // default: moment().format("L"),
       },
       time: {
         type: String,
-        default: moment().format("LT"),
+        // default: moment().format("LT"),
       },
     },
   },

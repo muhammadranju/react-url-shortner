@@ -31,7 +31,8 @@ const analytics = async (req, res) => {
         acc.push({
           name: dateTimeKey,
           Desktop: type === "Desktop" ? 1 : 0,
-          Mobile: type === "Mobile" ? 1 : 0
+          Mobile: type === "Mobile" ? 1 : 0,
+          Tablet: type === "Tablet" ? 1 : 0
         });
       }
 

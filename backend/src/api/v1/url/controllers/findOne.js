@@ -2,6 +2,7 @@
 const Analytics = require("../../../../models/analyticsSchema.model/analyticsSchema.model");
 const ShortUrl = require("../../../../models/url.model/url.model");
 const { UAParser } = require("ua-parser-js");
+const moment = require("moment");
 
 const getUserInfo = (req) => {
   const parser = new UAParser(req.headers["user-agent"]);
@@ -20,6 +21,7 @@ const findOne = async (req, res) => {
   const MAX_HITS = 1000; // Define max hits threshold as a constant
   try {
     const { shortLink } = req.params;
+    const { country_name } = req.query;
 
     // Atomically find and increment totalHits if link exists
     const link = await ShortUrl.findOneAndUpdate(
@@ -41,8 +43,12 @@ const findOne = async (req, res) => {
     const userInfo = getUserInfo(req); // Simulated user info
     const newAnalytics = new Analytics({
       shortUrlId: link._id,
-      location: userInfo.location,
+      location: country_name,
       device: userInfo.device,
+      dateTime: {
+        date: moment().format("L"),
+        time: moment().format("LT"),
+      },
     });
     console.log(userInfo);
 
@@ -51,8 +57,7 @@ const findOne = async (req, res) => {
     await link.save();
     await newAnalytics.save();
 
-    // Redirect to the original URL if all conditions are met
-    return res.status(302).redirect(link.originalUrl);
+       return res.status(302).redirect(link.originalUrl);
   } catch (error) {
     console.log(error);
   }

@@ -29,6 +29,7 @@ module.exports = function (passport) {
           user.photoURL = profile.photos[0].value;
           user.googleId = profile.id;
           user.accountType = "GOOGLE";
+          console.log(user)
           await user.save();
           return done(null, user);
         } catch (error) {
