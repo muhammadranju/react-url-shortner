@@ -10,14 +10,17 @@ const analyticsSchema = new mongoose.Schema(
     },
     location: {
       type: String,
+      lowercase: true
       // required: true,
     },
     device: {
       name: {
         type: String,
+        lowercase: true
       },
       type: {
         type: String,
+        lowercase: true
       },
     },
 
