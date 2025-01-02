@@ -11,7 +11,7 @@ const getUserInfo = (req) => {
   return {
     location: "India", // Example location (In production, use a geo-IP library)
     device: {
-      name: deviceInfo?.device?.model || "Windows",
+      name: deviceInfo?.os?.name || "Windows",
       type: deviceInfo?.device?.type || "Desktop",
     },
   };
