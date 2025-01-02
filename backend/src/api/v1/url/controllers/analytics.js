@@ -14,19 +14,22 @@ const analytics = async (req, res) => {
 
 
     const groupedData = findAnalytics.reduce((acc, record) => {
-      const { time } = record.dateTime;
+      const { date, time } = record.dateTime;
       const { type } = record.device;
 
-      // Find if a record already exists for the same time
-      let existingEntry = acc.find(entry => entry.name === time);
+      // Combine date and time to ensure unique grouping for the exact click moment
+      const dateTimeKey = `${date} ${time}`;
+
+      // Find if a record already exists for the same date and time
+      let existingEntry = acc.find(entry => entry.name === dateTimeKey);
 
       if (existingEntry) {
         // Increment the count for Desktop or Mobile
         existingEntry[type] = (existingEntry[type] || 0) + 1;
       } else {
-        // Create a new entry for the time
+        // Create a new entry for the date-time
         acc.push({
-          name: time,
+          name: dateTimeKey,
           Desktop: type === "Desktop" ? 1 : 0,
           Mobile: type === "Mobile" ? 1 : 0
         });
