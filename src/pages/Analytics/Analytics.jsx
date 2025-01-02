@@ -25,13 +25,21 @@ const Analytics = () => {
   ];
 
   // Format data for the Line Chart
-  const lineChartData = [
-    { name: "10:00 AM", Desktop: 1, Mobile: 0, Tablet: 0 },
-    { name: "11:30 AM", Desktop: 1, Mobile: 1, Tablet: 0 },
-    { name: "01:15 PM", Desktop: 1, Mobile: 1, Tablet: 1 },
-    { name: "02:45 PM", Desktop: 2, Mobile: 1, Tablet: 1 },
-    { name: "04:00 PM", Desktop: 2, Mobile: 2, Tablet: 1 },
-  ];
+  // const lineChartData = [
+  //   { name: "10:00 AM", Desktop: 1, Mobile: 0, Tablet: 0 },
+  //   { name: "11:30 AM", Desktop: 1, Mobile: 1, Tablet: 0 },
+  //   { name: "01:15 PM", Desktop: 1, Mobile: 1, Tablet: 1 },
+  //   { name: "02:45 PM", Desktop: 2, Mobile: 1, Tablet: 1 },
+  //   { name: "04:00 PM", Desktop: 2, Mobile: 2, Tablet: 1 },
+  // ];
+
+  // const lineChartData = [
+  //   { name: "10:00 AM", Desktop: 1, Mobile: 0,  },
+  //   { name: "11:30 AM", Desktop: 1, Mobile: 1,  },
+  //   { name: "01:15 PM", Desktop: 1, Mobile: 1,  },
+  //   { name: "02:45 PM", Desktop: 2, Mobile: 1,  },
+  //   { name: "04:00 PM", Desktop: 2, Mobile: 2,  },
+  // ];
 
   useEffect(() => {
     const getUrlInfo = async () => {
@@ -50,7 +58,8 @@ const Analytics = () => {
     getUrlInfo();
   }, []);
 
-  console.log(url);
+  console.log(url?.lineChartData);
+  
   return (
     <div className="container mx-auto px-4 py-10">
       <Button
@@ -116,7 +125,7 @@ const Analytics = () => {
             Device Type Analytics (Over Time)
           </h2>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={lineChartData}>
+            <LineChart data={url?.lineChartData}>
               <XAxis dataKey="name" stroke="#8884d8" />
               <YAxis />
               <Tooltip
@@ -140,13 +149,13 @@ const Analytics = () => {
                 strokeWidth={2}
                 dot={{ r: 4 }}
               />
-              <Line
+              {/* <Line
                 type="monotone"
                 dataKey="Tablet"
                 stroke="#f472b6"
                 strokeWidth={2}
                 dot={{ r: 4 }}
-              />
+              /> */}
             </LineChart>
           </ResponsiveContainer>
         </div>

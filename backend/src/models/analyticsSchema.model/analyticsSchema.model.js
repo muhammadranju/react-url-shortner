@@ -3,7 +3,7 @@ const moment = require("moment");
 
 const analyticsSchema = new mongoose.Schema(
   {
-    shortUrlId: {
+    shortUrlId: { 
       type: mongoose.Schema.Types.ObjectId,
       ref: "ShortUrl", // Reference to the Short URL schema
       required: true,
