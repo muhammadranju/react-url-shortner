@@ -15,32 +15,7 @@ const Analytics = () => {
   const { id } = useParams();
   const [url, setUrl] = useState(null);
   const navigate = useNavigate();
-  // Dummy user activity data (multiple escalations)
-  const demoData = [
-    { location: "United States", device: "Desktop", time: "2024-12-19 10:00" },
-    { location: "Canada", device: "Mobile", time: "2024-12-19 11:30" },
-    { location: "India", device: "Tablet", time: "2024-12-19 13:15" },
-    { location: "Germany", device: "Desktop", time: "2024-12-19 14:45" },
-    { location: "Australia", device: "Mobile", time: "2024-12-19 16:00" },
-  ];
-
-  // Format data for the Line Chart
-  // const lineChartData = [
-  //   { name: "10:00 AM", Desktop: 1, Mobile: 0, Tablet: 0 },
-  //   { name: "11:30 AM", Desktop: 1, Mobile: 1, Tablet: 0 },
-  //   { name: "01:15 PM", Desktop: 1, Mobile: 1, Tablet: 1 },
-  //   { name: "02:45 PM", Desktop: 2, Mobile: 1, Tablet: 1 },
-  //   { name: "04:00 PM", Desktop: 2, Mobile: 2, Tablet: 1 },
-  // ];
-
-  // const lineChartData = [
-  //   { name: "10:00 AM", Desktop: 1, Mobile: 0,  },
-  //   { name: "11:30 AM", Desktop: 1, Mobile: 1,  },
-  //   { name: "01:15 PM", Desktop: 1, Mobile: 1,  },
-  //   { name: "02:45 PM", Desktop: 2, Mobile: 1,  },
-  //   { name: "04:00 PM", Desktop: 2, Mobile: 2,  },
-  // ];
-
+ 
   useEffect(() => {
     const getUrlInfo = async () => {
       const urlData = await fetch(
@@ -58,10 +33,11 @@ const Analytics = () => {
     getUrlInfo();
   }, []);
 
-  console.log(url?.lineChartData);
-  
+  console.log(url);
+
+ 
   return (
-    <div className="container mx-auto px-4 py-10">
+    <div className="lg:container lg:mx-auto lg:px-4 py-10">
       <Button
         onClick={() => navigate(-1)}
         className="flex   items-center gap-2 mb-5 rounded-full bg-gray-700 py-2.5 lg:px-5 lg:pr-5 px-3 pr-4 text-xs/4 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
@@ -172,16 +148,26 @@ const Analytics = () => {
                   <th className="py-2 px-4 text-left">#</th>
                   <th className="py-2 px-4 text-left">Location</th>
                   <th className="py-2 px-4 text-left">Device Type</th>
+                  <th className="py-2 px-4 text-left">Date</th>
                   <th className="py-2 px-4 text-left">Time</th>
                 </tr>
               </thead>
               <tbody>
-                {demoData.map((item, index) => (
+                {url?.findAnalytics?.reverse().map((item, index) => (
                   <tr key={index} className="hover:bg-[#333344]">
                     <td className="py-2 px-4">{index + 1}</td>
-                    <td className="py-2 px-4">{item.location}</td>
-                    <td className="py-2 px-4">{item.device}</td>
-                    <td className="py-2 px-4">{item.time}</td>
+                    <td className="py-2 px-4 capitalize">
+                      {item?.location ?? "N/A"}
+                    </td>
+                    <td className="py-2 px-4 capitalize">
+                      {item?.device.type ?? "N/A"}
+                    </td>
+                    <td className="py-2 px-4">
+                      {item?.dateTime?.date ?? "N/A"}
+                    </td>
+                    <td className="py-2 px-4">
+                      {item?.dateTime?.time ?? "N/A"}
+                    </td>
                   </tr>
                 ))}
               </tbody>

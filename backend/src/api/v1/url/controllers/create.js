@@ -64,8 +64,8 @@ const create = async (req, res) => {
         success: false,
         message: "You can't shorten the same URL again",
         existingLink: {
-          url: existingURL.find((url) => url.user.toString() === req.user.id)
-            .shortUrl,
+          // url: existingURL.find((url) => url.user.toString() === req.user.id).shortUrl,
+          url: existingURL.find((url) => url.user.toString() === req.user.id).shotLink,
           success: true,
         },
       });

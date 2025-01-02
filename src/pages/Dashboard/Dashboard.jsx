@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import TableSkeleton from "../../components/TableSkeleton/TableSkeleton";
 import TableSkeletonMobile from "../../components/TableSkeleton/TableSkeletonMobile";
 import axios from "axios";
+import AlertModel from "../../components/Models/AlertModel";
 
 const Dashboard = () => {
   const { user, verifyUser } = useContext(AuthContext);
@@ -19,16 +20,16 @@ const Dashboard = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isExistsLink, setIsExistsLink] = useState("");
   const urlRef = useRef(null);
   const token = Cookies.get("__myapp_token");
   const limit = 10; // Fixed number of items per page
-
-  console.log(urls);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset 
   } = useForm();
 
   // Fetch URLs with Pagination
@@ -56,7 +57,6 @@ const Dashboard = () => {
     }
     setIsLoading(false);
   };
-  console.log(typeof Cookies.get("__myapp_user_updated"));
   useEffect(() => {
     const userInfoUpdate = async () => {
       try {
@@ -135,14 +135,16 @@ const Dashboard = () => {
       if (res.ok) {
         setUrls([data.links, ...urls]);
         swal("URL created successfully", { icon: "success" });
+        reset({ url: "" });
+
         dataUrl.url = "";
         fetchUrls(1); // Refresh URLs and go to the first page
       } else {
-        toast.error(data.message);
+        // toast.error(data.message);
+
         if (data.message === "You can't shorten the same URL again") {
-          swal(data.message, `Old Link: ${data?.existingLink?.url}`, {
-            icon: "warning",
-          });
+          document.getElementById("showExistsLink").showModal();
+          setIsExistsLink(data?.existingLink?.url);
         }
       }
     } catch (error) {
@@ -262,6 +264,13 @@ const Dashboard = () => {
           Next
         </button>
       </div>
+      {/* <button
+        className="btn"
+        onClick={() => document.getElementById("showExistsLink").showModal()}
+      >
+        open modal
+      </button> */}
+      <AlertModel isExistsLink={isExistsLink} />
     </section>
   );
 };

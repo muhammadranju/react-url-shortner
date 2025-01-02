@@ -38,16 +38,14 @@ const analytics = async (req, res) => {
 
       return acc;
     }, []);
-    console.log(findAnalytics);
-    console.log(groupedData);
-    // console.log(findShortUrl);
-
     res.status(200).json({
       status: 200,
       success: true,
       message: "Short URL Analytics",
       analytics: findShortUrl,
+      findAnalytics,
       lineChartData:groupedData
+      
     });
   } catch (error) {
     console.log(error);

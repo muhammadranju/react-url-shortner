@@ -261,7 +261,7 @@ const Profile = () => {
         </div>
         {/* User Location Information Section */}
         <div className=" h-full lg:w-[50%] mb-10 border-2 border-gray-100/10 rounded-lg">
-          <div className="h-[440px] w-full  bg-[#181822]/50  p-6  ">
+          <div className="lg:h-[440px] w-full  bg-[#181822]/50  p-6  ">
             <div className="px-4 py-5 sm:px-6">
               <h3 className="text-lg leading-6 font-medium text-gray-100">
                 Your Location Information
