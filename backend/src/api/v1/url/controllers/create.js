@@ -65,13 +65,15 @@ const create = async (req, res) => {
         message: "You can't shorten the same URL again",
         existingLink: {
           // url: existingURL.find((url) => url.user.toString() === req.user.id).shortUrl,
-          url: existingURL.find((url) => url.user.toString() === req.user.id).shotLink,
+          url: existingURL.find((url) => url.user.toString() === req.user.id)
+            .shotLink,
           success: true,
         },
       });
     }
 
     const shortLink = shortid.generate().toLowerCase();
+
     const newLongURL = `https://${req.hostname}/${shortLink}`;
 
     const links = new ShortURL({

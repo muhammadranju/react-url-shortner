@@ -20,6 +20,10 @@ const urlSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    clicksLimit: {
+      type: Number,
+      default: 1000,
+    },
     icon: {
       type: String,
       required: true,

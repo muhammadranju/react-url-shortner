@@ -18,17 +18,19 @@ const getUserInfo = (req) => {
 };
 
 const findOne = async (req, res) => {
-  const MAX_HITS = 1000; // Define max hits threshold as a constant
+  // const LIMIT = 0; // Define max hits threshold as a constant
   try {
     const { shortLink } = req.params;
     const { country_name } = req.query;
 
     // Atomically find and increment totalHits if link exists
-    const link = await ShortUrl.findOneAndUpdate(
-      { shotLink: shortLink },
-      { $inc: { clicks: 1 } },
-      { new: true } // Return the updated document
-    );
+    // const link = await ShortUrl.findOneAndUpdate(
+    //   { shotLink: shortLink },
+    //   { $inc: { clicks: 1, clicksLimit: -1 } }, // Combine the $inc operations
+    //   { new: true } // Return the updated document
+    // );
+
+    const link = await ShortUrl.findOne({ shotLink: shortLink });
 
     // Handle cases where link is not found
     if (!link) {
@@ -36,8 +38,13 @@ const findOne = async (req, res) => {
     }
 
     // Check if the link has exceeded maximum allowed hits
-    if (link.clicks > MAX_HITS) {
+    if (link.clicksLimit === 0) {
       return res.redirect(`${process.env.FRONTEND_URL}/limit-over`);
+    }
+
+    if (link.clicksLimit !== 0) {
+      link.clicksLimit = link.clicksLimit - 1;
+      link.clicks = link.clicks + 1;
     }
 
     const userInfo = getUserInfo(req); // Simulated user info
@@ -57,7 +64,7 @@ const findOne = async (req, res) => {
     await link.save();
     await newAnalytics.save();
 
-       return res.status(302).redirect(link.originalUrl);
+    return res.status(302).redirect(link.originalUrl);
   } catch (error) {
     console.log(error);
   }
