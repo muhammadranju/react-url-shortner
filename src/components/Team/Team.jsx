@@ -25,10 +25,10 @@ const Team = () => {
           </div>
           <div className="flex flex-col justify-center mt-5 sm:mt-0 sm:p-5 sm:col-span-2">
             <p className="text-lg font-bold">Md. Ranju</p>
-            <p className="mb-4 text-xs text-gray-200">Backend</p>
+            <p className="mb-4 text-xs text-gray-200">Frontend & Backend</p>
             <p className="mb-4 text-sm tracking-wide text-gray-200 font-extralight">
-              Ranju is doing Backend of this project. He make all apis and
-              database.
+              Ranju is doing Frontend for designing also UI and Backend for
+              making apis, authentication, database manage and more.
             </p>
             <div className="flex items-center space-x-3">
               <a
@@ -67,7 +67,7 @@ const Team = () => {
             <p className="text-lg font-bold">Mukit Hossen</p>
             <p className="mb-4 text-xs text-gray-200">Frontend</p>
             <p className="mb-4 text-sm tracking-wide text-gray-200 font-extralight">
-              Mukit is doing Frontend of this project. He make all UI components
+              Mukit is doing Frontend of this project. He help to make ui ideas
               and design.
             </p>
             <div className="flex items-center space-x-3">
@@ -83,6 +83,13 @@ const Team = () => {
                 className="text-blue-500 transition-colors duration-300 hover:text-deep-purple-accent-400"
               >
                 <FaFacebook className="text-2xl" />
+              </a>
+              <a
+                href="https://mukithossen.vercel.app"
+                target="_blank"
+                className="text-blue-800 transition-colors duration-300 hover:text-deep-purple-accent-400"
+              >
+                <TbWorldWww className="text-3xl" />
               </a>
             </div>
           </div>
