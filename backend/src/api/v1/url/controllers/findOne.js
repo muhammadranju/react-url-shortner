@@ -2,7 +2,7 @@
 const Analytics = require("../../../../models/analyticsSchema.model/analyticsSchema.model");
 const ShortUrl = require("../../../../models/url.model/url.model");
 const { UAParser } = require("ua-parser-js");
-const moment = require("moment");
+
 const momentZone = require("moment-timezone");
 const getUserInfo = (req) => {
   const parser = new UAParser(req.headers["user-agent"]);

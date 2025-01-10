@@ -10,12 +10,13 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import UserActivity from "./UserActivity";
 
 const Analytics = () => {
   const { id } = useParams();
   const [url, setUrl] = useState(null);
   const navigate = useNavigate();
- 
+
   useEffect(() => {
     const getUrlInfo = async () => {
       const urlData = await fetch(
@@ -35,7 +36,6 @@ const Analytics = () => {
 
   console.log(url);
 
- 
   return (
     <div className="lg:container lg:mx-auto lg:px-4 py-10">
       <Button
@@ -137,7 +137,7 @@ const Analytics = () => {
         </div>
 
         {/* User Activity Table */}
-        <div className="p-6 bg-[#1f1f2f] rounded-lg shadow-md">
+        {/* <div className="p-6 bg-[#1f1f2f] rounded-lg shadow-md">
           <h2 className="text-2xl font-bold text-gray-100 mb-4 text-center">
             User Activity
           </h2>
@@ -173,7 +173,9 @@ const Analytics = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        </div> */}
+
+        <UserActivity url={url} />
 
         {/* Icon and Short Link */}
         <div className="mt-6 flex justify-center items-center">
