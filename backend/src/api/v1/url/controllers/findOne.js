@@ -20,7 +20,7 @@ const findOne = async (req, res) => {
   // const LIMIT = 0; // Define max hits threshold as a constant
   try {
     const { shortLink } = req.params;
-    const { country_name } = req.query;
+    const { country_name, timezone } = req.query;
 
     // Atomically find and increment totalHits if link exists
     // const link = await ShortUrl.findOneAndUpdate(
@@ -31,9 +31,6 @@ const findOne = async (req, res) => {
 
     const link = await ShortUrl.findOne({ shotLink: shortLink });
 
-    var userTimeZone = momentZone.tz.guess();
-    var nowInUserTimeZone = momentZone.tz(userTimeZone).format("LT");
-    console.log("User Time Zone:", nowInUserTimeZone);
     // Handle cases where link is not found
     if (!link) {
       return res.redirect(`${process.env.FRONTEND_URL}/not-found`);
@@ -55,8 +52,8 @@ const findOne = async (req, res) => {
       location: country_name,
       device: userInfo.device,
       dateTime: {
-        date: momentZone.tz(userTimeZone).format("L"),
-        time: momentZone.tz(userTimeZone).format("LT"),
+        date: momentZone.tz(timezone).format("L"),
+        time: momentZone.tz(timezone).format("LT"),
       },
     });
     console.log(newAnalytics);
