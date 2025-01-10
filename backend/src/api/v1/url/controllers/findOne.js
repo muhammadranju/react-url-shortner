@@ -3,7 +3,7 @@ const Analytics = require("../../../../models/analyticsSchema.model/analyticsSch
 const ShortUrl = require("../../../../models/url.model/url.model");
 const { UAParser } = require("ua-parser-js");
 const moment = require("moment");
-
+const momentZone = require("moment-timezone");
 const getUserInfo = (req) => {
   const parser = new UAParser(req.headers["user-agent"]);
   const deviceInfo = parser.getResult();
@@ -31,6 +31,9 @@ const findOne = async (req, res) => {
 
     const link = await ShortUrl.findOne({ shotLink: shortLink });
 
+    var userTimeZone = momentZone.tz.guess();
+    var nowInUserTimeZone = momentZone.tz(userTimeZone).format("LT");
+    console.log("User Time Zone:", nowInUserTimeZone);
     // Handle cases where link is not found
     if (!link) {
       return res.redirect(`${process.env.FRONTEND_URL}/not-found`);
@@ -52,8 +55,8 @@ const findOne = async (req, res) => {
       location: country_name,
       device: userInfo.device,
       dateTime: {
-        date: moment().utc().format("L"),
-        time: moment().utc().format("LT"),
+        date: momentZone.tz(userTimeZone).format("L"),
+        time: momentZone.tz(userTimeZone).format("LT"),
       },
     });
     console.log(newAnalytics);
