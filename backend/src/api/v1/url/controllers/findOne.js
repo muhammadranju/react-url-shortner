@@ -7,7 +7,6 @@ const moment = require("moment");
 const getUserInfo = (req) => {
   const parser = new UAParser(req.headers["user-agent"]);
   const deviceInfo = parser.getResult();
-  console.log(deviceInfo);
   return {
     location: "India", // Example location (In production, use a geo-IP library)
     device: {
@@ -53,11 +52,11 @@ const findOne = async (req, res) => {
       location: country_name,
       device: userInfo.device,
       dateTime: {
-        date: moment().format("L"),
-        time: moment().format("LT"),
+        date: moment().utc().format("L"),
+        time: moment().utc().format("LT"),
       },
     });
-    console.log(userInfo);
+    console.log(newAnalytics);
 
     // Save the analytics data to the database
     link.analytics.push(newAnalytics._id);
